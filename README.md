@@ -14,3 +14,7 @@ different models:
 * in affine Weierstrass coordinates,
 * in projective Montgomery coordinates,
 * in Twisted Edwards projective coordinates.
+Check it with:
+```
+sage bandersnatch-*.py
+```
