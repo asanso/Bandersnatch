@@ -1,3 +1,4 @@
+import sage.all
 from sage.rings.finite_rings.finite_field_constructor import FiniteField
 
 # Weierstrass Bandersnatch curve in affine coordinates
