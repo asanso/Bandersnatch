@@ -11,8 +11,8 @@ d = 0x6389c12633c267cbc66e3bf86be3b6d8cb66677177e54f92b369f2f5188d58e7
 ## Finding Bandersnatch
 Bandersnatch is a curve of small discriminant `-D = -4*2` and `j=8000`.
 The command outputs the file `small-disc-curves.txt`:
-```
-sage small-disc-curves.py
+```shell
+$ sage small-disc-curves.py
 ```
 It computes all the possible ordinary curves with `D < 389`. Only
 Bandersnatch has a cryptographically secure structure:
