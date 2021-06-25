@@ -3,10 +3,10 @@ from sage.rings.integer_ring import Z as ZZ
 from sage.matrix.constructor import Matrix
 from sage.rings.finite_rings.finite_field_constructor import FiniteField
 from sage.modules.free_module_element import free_module_element as vector
-from te_curve import TE_Curve
-from te_curve import Point
+from curve import Curve
+from curve import Point
 
-class Bandersnatch(TE_Curve):
+class Bandersnatch(Curve):
     
     def __init__(self,
                  p, a, d,

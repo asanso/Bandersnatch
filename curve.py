@@ -4,7 +4,7 @@ from sage.matrix.constructor import Matrix
 from sage.rings.finite_rings.finite_field_constructor import FiniteField
 from sage.modules.free_module_element import free_module_element as vector
 
-class TE_Curve():
+class Curve():
     
     def __init__(self, p, a, d, r, cofactor):
         self.p = p

@@ -3,12 +3,12 @@ from sage.misc.misc import cputime
 from sage.misc.persist import load
 
 # Jubjub curve
-from te_curve import TE_Curve
+from curve import Curve
 p_jubjub = 0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001
 a_jubjub = -1
 d_jubjub = 0x2a9318e74bfa2b48f5fd9207e6bd7fd4292d7f6d37579d2601065fd6d6343eb1
 r_jubjub = 0x0e7db4ea6533afa906673b0101343b00a6682093ccc81082d0970e5ed6f72cb7
-J = TE_Curve(p_jubjub, a_jubjub, d_jubjub, r_jubjub, 8)
+J = Curve(p_jubjub, a_jubjub, d_jubjub, r_jubjub, 8)
 Q = J.point_of_order_r()
 m = random.randint(0,r_jubjub)
 
