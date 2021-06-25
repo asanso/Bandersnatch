@@ -70,6 +70,6 @@ sage get_params.py
 
 ## Comparison with JubJub
 
-TODO, but `GLV-double-and-add` is already more efficient than
+Todo, but `GLV-double-and-add` is already more efficient than
 `double-and-add`.
 
