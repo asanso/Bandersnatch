@@ -1,0 +1,37 @@
+\documentclass{amsart}
+
+
+\usepackage[capitalize]{cleveref}
+\usepackage{tikz}
+\usepackage[all]{xy}
+\usepackage[foot]{amsaddr}
+%\newcommand{\AS}[1]{\color{red}#1\color{black}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Article 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\title[Bandersnatch]{Bandersnatch: a fast elliptic curve built over the BLS12-381 scalar field.}
+\author{Simon Masson}
+\address{Heliax}
+\author{Antonio Sanso}
+\address{Ethereum Foundation and Ruhr Universit{\"a}t Bochum}
+
+
+\maketitle
+\medskip
+\begin{abstract}
+ In this short note we  introduce Bandersnatch a new elliptic curve built over the BLS12-381 scalar field. The curve is similar to JubJub but is equipped with the GLV endomorphism \cite{10.1007/3-540-44647-8_11} hence it has faster scalar multiplication.
+ \end{abstract}
+
+\section{Introduction} 
+TODO
+
+
+
+\paragraph*{Acknowledgments.} we would like to thank Luca De Feo, Justin Drake, Dankrad Feist, Daira Hopwood and Zhenfei Zhang for fruitful discussions.
+
+\bibliography{bandersnatch}{}
+\bibliographystyle{unsrt}
+\end{document}
