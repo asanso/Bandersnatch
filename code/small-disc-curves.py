@@ -1,10 +1,11 @@
+import os
 from sage.all import *
 from sage.rings.integer_ring import Z as ZZ
 from sage.arith.misc import fundamental_discriminant
 from sage.schemes.elliptic_curves.cm import hilbert_class_polynomial
 from sage.schemes.elliptic_curves.constructor import EllipticCurve
 
-f = open('small-disc-curves.txt', 'w')
+f = open(os.path.dirname(__file__) +'/small-disc-curves.txt', 'w')
 p = 0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001
 assert ZZ(p).is_prime()
 Fp = GF(p)
