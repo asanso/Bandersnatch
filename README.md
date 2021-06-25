@@ -54,16 +54,12 @@ coefficient `c` for the endomorphism in projective `x-z`-only coordinates:
 psi_M(x,z) = ( -(x-z)**2 - c * x * z , 2 * x * z )
 ```
 * In Twisted Edwards projective coordinates.
-
 The file `params-TE.py` includes the parameters of the curve in the
 form `a*x**2 + y**2 = 1 + d * x**2 * y**2`, and the endomorphism
 coefficients `a1,a2,a3,b1,b2,b3,c1,c2` such that
 ```python3
-psi_TE(x,y,z) = (
-    x * a1 * (y+a2*z) * (y+a3*z) * (y+c1*z) * (y+c2*z) ,
-	b1 * (y+b2*z) * (y+b3*z) * z**2 * y ,
-	(y+c1*z) * (y+c2*z) * z**2 * y
-	)
+psi_TE(x,y,z) = ( x * a1 * (y+a2*z) * (y+a3*z) * (y+c1*z) * (y+c2*z) ,
+b1 * (y+b2*z) * (y+b3*z) * z**2 * y , (y+c1*z) * (y+c2*z) * z**2 * y )
 ```
 
 The three files `params-W.py`, `params-M.py` and `params-TE.py` are
