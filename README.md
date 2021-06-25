@@ -75,3 +75,7 @@ This estimation can be reproducible using
 ```python3
 $ sage code/bench.py 
 ```
+and testing our methods using
+```python3
+$ sage code/test.py
+```
