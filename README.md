@@ -1,7 +1,8 @@
 # Bandersnatch
 
 Bandersnatch is an elliptic curve defined over the field `GF(p)` where
-`p` is the BLS12-381 curve subgroup order.
+`p` is the BLS12-381 curve subgroup order. It can be represented in
+Twisted Edwards form `a*x**2 + y**2 = 1 + d * x**2 * y**2` where:
 ```python3
 p = 0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001
 a = -5
@@ -19,8 +20,7 @@ $ sage small-disc-curves.py
 outputs the possible ordinary curves for `D < 389` (see
 `small-disc-curves.txt` for the output).
 Bandersnatch is the one of these curves that fits very well for
-cryptographic applications. Indeed, it has a subgroup of 253-bit order
-`r`:
+cryptographic applications: it has a subgroup of 253-bit order `r`.
 ```python3
 # Curver order
  2^2 * 13108968793781547619861935127046491459309155893440570251786403306729687672801
@@ -37,6 +37,7 @@ algorithm on the subgroup of order `r`.
 We provide three models in order to describe our curve, together with
 the coefficients for computing this endomorphism:
 * In affine Weierstrass coordinates.
+
 The file `params-W.py` contains the curve parameters `p, a, b` such
 that the Weierstrass equation of the curve over `GF(p)` is `y**2 =
 x**3 + a*x + b`. It also includes the coefficients
@@ -45,6 +46,7 @@ x**3 + a*x + b`. It also includes the coefficients
 psi_W(x,y) = ( u2*((x+r1)*x+r0)/(x+s0) , u3*y*((x+t1)*x+t0)/(x+s0)**2 )
 ```
 * In projective `x-z`-only Montgomery coordinates.
+
 The file `params-M.py` includes the parameters of the Montgomery curve
 `B*y**2 = x**3 + A*x**2 + x` over `GF(p)`, together with the
 coefficient `c` for the endomorphism in projective `x-z`-only coordinates:
@@ -52,6 +54,7 @@ coefficient `c` for the endomorphism in projective `x-z`-only coordinates:
 psi_M(x,z) = ( -(x-z)**2 - c * x * z , 2 * x * z )
 ```
 * In Twisted Edwards projective coordinates.
+
 The file `params-TE.py` includes the parameters of the curve in the
 form `a*x**2 + y**2 = 1 + d * x**2 * y**2`, and the endomorphism
 coefficients `a1,a2,a3,b1,b2,b3,c1,c2` such that
