@@ -1,10 +1,11 @@
 \documentclass{amsart}
 
-
+\usepackage{hyperref}
 \usepackage[capitalize]{cleveref}
 \usepackage{tikz}
 \usepackage[all]{xy}
 \usepackage[foot]{amsaddr}
+
 %\newcommand{\AS}[1]{\color{red}#1\color{black}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -50,10 +51,11 @@ and can be computed in 17 multiplications and 6 additions modulo $p$ ($a_i, b_i,
 
 %### Scalar multiplication improvement
 From the efficient endomorphism $\psi$, it is easy to apply the GLV method and improve the scalar multiplication cost:
-* Roughly, a scalar multiplication $[n]P$ cost $(\log n) \text{Dbl} + (\log n/2) \text{Add}$.
-* Using the GLV endomorphism, we can compute $[n]P$ using $(\log n/2 )\text{Dbl} + (3\log n/8) \text{Add}$, plus few precomputations.
+Roughly, a scalar multiplication $[n]P$ cost $(\log n) \text{Dbl} + (\log n/2) \text{Add}$.
+Using the GLV endomorphism, we can compute $[n]P$ using $(\log n/2 )\text{Dbl} + (3\log n/8) \text{Add}$, plus few precomputations.
 
-We obtained `python` benchmarks between the double-and-add algorithm and the GLV method applied in the case of our curve, and the GLV version is **30% faster**.
+We obtained `python` benchmarks between the double-and-add algorithm and the GLV method applied in the case of our curve, and the GLV version is about 30\% faster 
+\footnote{Source code \url{https://github.com/asanso/Bandersnatch/}.}
 
 \bigskip
 \paragraph*{\textbf{Acknowledgments.}} we would like to thank Luca De Feo, Justin Drake, Dankrad Feist, Daira Hopwood and Zhenfei Zhang for fruitful discussions.
