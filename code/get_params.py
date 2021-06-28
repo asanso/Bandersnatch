@@ -36,7 +36,7 @@ r0,r1,_ = phi0.numerator()(X,1).list()
 s0 = phi0.denominator()(X,1).list()[0]
 t0,t1,_ = phi1.numerator()(X,1).list()
 
-f = open(os.path.dirname(__file__) +'/params-W.py', 'w')
+f = open('./' + os.path.dirname(__file__) +'/params-W.py', 'w')
 f.write('import sage.all\n')
 f.write('from sage.rings.finite_rings.finite_field_constructor import FiniteField\n')
 f.write('# Weierstrass parameters\n')
@@ -65,7 +65,7 @@ x2 = E_m.division_polynomial(2).roots()[1][0]
 c = A+2
 u = 1/Fp(-2).sqrt()
 
-f = open(os.path.dirname(__file__) +'/params-M.py', 'w')
+f = open('./' + os.path.dirname(__file__) +'/params-M.py', 'w')
 f.write('import sage.all\n')
 f.write('from sage.rings.finite_rings.finite_field_constructor import FiniteField\n')
 f.write('# Montgomery parameters\n')
@@ -125,7 +125,7 @@ b1 = a2
 [(b2,_),(b3,_)] = fyn.roots()
 [(c1,_),(c2,_)] = fyd.roots()
 
-f = open(os.path.dirname(__file__) +'/params-TE.py', 'w')
+f = open('./' + os.path.dirname(__file__) +'/params-TE.py', 'w')
 f.write('import sage.all\n')
 f.write('from sage.rings.finite_rings.finite_field_constructor import FiniteField\n')
 f.write('# Twisted Edwards parameters\n')
