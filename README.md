@@ -65,7 +65,7 @@ psi_TE(x,y,z) = ( x * a1 * (y+a2*z) * (y+a3*z) * (y+c1*z) * (y+c2*z) ,
 b1 * (y+b2*z) * (y+b3*z) * z**2 * y , (y+c1*z) * (y+c2*z) * z**2 * y )
 ```
 
-## Comparison with JubJub
+## Comparison with Jubjub
 
 We implemented a non-optimized elliptic curve group law arithmetic in
 `code/curve.py` and `code/bandersnatch.py`.
