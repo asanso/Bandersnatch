@@ -23,13 +23,13 @@
 \maketitle
 \medskip
 \begin{abstract}
- In this short note we  introduce Bandersnatch a new elliptic curve built over the BLS12-381 \cite{bls12381} scalar field. The curve is similar to JubJub \cite{jubjub} but is equipped with the GLV endomorphism \cite{10.1007/3-540-44647-8_11} hence it has faster scalar multiplication.
+ In this short note we  introduce Bandersnatch a new elliptic curve built over the BLS12-381 \cite{bls12381} scalar field. The curve is similar to Jubjub \cite{jubjub} but is equipped with the GLV endomorphism \cite{10.1007/3-540-44647-8_11} hence it has faster scalar multiplication.
  \end{abstract}
 
 \section{Introduction} 
 BLS12-381 is a pairing friendly curve created by Sean Bowe in 2017 \cite{bls12381}. Currently BLS12-381 is universally used for digital signatures and zero-knowledge proofs by many project orbiting in the 
-blockchin universe: Zcash, Ethereum 2.0, Skale, Algorand, Dfinity, Chia, and more. The ZCash team also introduced a new curve built over the BLS12-381 scalar field JubJub  \cite{jubjub}: a twisted Edwards curve that can be made efficient inside of the zk-SNARK circuit.
-In order for some cryptographic application to scale it is needed to have a curve like JubJub but with faster scalar multiplication. One efficient way to speed scalar multiplication up is to employ the celebrated GLV endomorphism \cite{10.1007/3-540-44647-8_11} (also used by the “Bitcoin curve” - secp256k1). This technique was until few months ago protected by a US Patent that is now expired and freely usable.
+blockchin universe: Zcash, Ethereum 2.0, Skale, Algorand, Dfinity, Chia, and more. The ZCash team also introduced a new curve built over the BLS12-381 scalar field Jubjub  \cite{jubjub}: a twisted Edwards curve that can be made efficient inside of the zk-SNARK circuit.
+In order for some cryptographic application to scale it is needed to have a curve like Jubjub but with faster scalar multiplication. One efficient way to speed scalar multiplication up is to employ the celebrated GLV endomorphism \cite{10.1007/3-540-44647-8_11} (also used by the “Bitcoin curve” - secp256k1). This technique was until few months ago protected by a US Patent that is now expired and freely usable.
 We performed an exhaustive search of curves where the GLV endomorphism could be used over the BLS12-381 scalar field using the Complex Multiplication (CM) method of generating an elliptic curve. 
 
 \section{Bandersnatch} 
@@ -37,7 +37,7 @@ We performed an exhaustive search of curves where the GLV endomorphism could be 
 We performed an exhaustive search of curves where the GLV endomorphism could be used over the BLS12-381 scalar field using the Complex Multiplication (CM) method of generating an elliptic curve. To be more specific we computed the order of such curves for the discriminants from $-1$ to $-388$.
 We found one suitable curve for discriminant $-8$ with order 
 $$2^2\cdot 13108968793781547619861935127046491459309155893440570251786403306729687672801$$
-Bandersnatch is also twisted secure: the order of the twist is $$2^7 \cdot 3^3 \cdot 15172417585395309745210573063711216967055694857434315578142854216712503379$$
+Bandersnatch is also twist secure: the order of the twist is $$2^7 \cdot 3^3 \cdot 15172417585395309745210573063711216967055694857434315578142854216712503379$$
 The curve has j-invariant equal $8000$ and exhibits $125.75$ bit security  . Given the shape of the order it can be expressed also in Montgomery and Edward form. 
 Bandersnatch in twisted Edwards form looks like
 
@@ -55,7 +55,7 @@ From the efficient endomorphism $\psi$, it is easy to apply the GLV method and i
 Roughly, a scalar multiplication $[n]P$ cost $(\log n) \text{Dbl} + (\log n/2) \text{Add}$.
 Using the GLV endomorphism, we can compute $[n]P$ using $(\log n/2 )\text{Dbl} + (3\log n/8) \text{Add}$, plus few precomputations.
 
-We obtained `python` benchmarks between the double-and-add algorithm and the GLV method applied in the case of our curve, and the GLV version is about 30\% faster 
+We performed `python` benchmarks between the double-and-add algorithm and the GLV method applied in the case of our curve, and the GLV version is about 30\% faster 
 \footnote{Source code \url{https://github.com/asanso/Bandersnatch/}.}
 
 \bigskip
