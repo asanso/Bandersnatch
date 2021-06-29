@@ -21,6 +21,7 @@ clean_params:
 	rm -vf code/params-TE.py
 
 pdf:
+	git submodule update
 	pdflatex -output-directory paper bandersnatch.tex
 	cd paper && bibtex bandersnatch.aux && cd ..
 	pdflatex -output-directory paper bandersnatch.tex
