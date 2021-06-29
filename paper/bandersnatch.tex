@@ -26,7 +26,7 @@
 \maketitle
 \medskip
 \begin{abstract}
- In this short note we  introduce Bandersnatch a new elliptic curve built over the BLS12-381 \cite{bls12381} scalar field. The curve is similar to Jubjub \cite{jubjub} but is equipped with the GLV endomorphism \cite{10.1007/3-540-44647-8_11} hence it has faster scalar multiplication.
+ In this short note we  introduce Bandersnatch a new elliptic curve built over the BLS12-381 \cite{bls12381} scalar field. The curve is similar to Jubjub \cite{jubjub} but is equipped with the GLV endomorphism \cite{C:GalLamVan01} hence it has faster scalar multiplication.
  \end{abstract}
 
 \section{Introduction}
@@ -44,7 +44,7 @@ be made efficient inside of the zk-SNARK circuit.
 In order for some cryptographic application to scale, it is needed to
 have a curve like Jubjub but with faster scalar multiplication. One
 efficient way to speed scalar multiplication up is to employ the
-celebrated GLV endomorphism \cite{10.1007/3-540-44647-8_11} (also used
+celebrated GLV endomorphism \cite{C:GalLamVan01} (also used
 by the “Bitcoin curve” - secp256k1).
 This technique was until few months ago protected by a US Patent that
 is now expired and freely usable.
@@ -56,7 +56,7 @@ Multiplication (CM) method of generating an elliptic curve.
 
 \section{Small discriminant curves}
 
-The GLV method~\ref{GLV} is a well known trick for accelerating the
+The GLV method~\cite{C:GalLamVan01} is a well known trick for accelerating the
 scalar multiplication over particular curve. In a nutshell, it applies
 to elliptic curves endowed with an efficiently computable endomorphism
 $\psi$.
@@ -70,7 +70,7 @@ map $(x,y)\mapsto (x^p,y^p)$ is an endomorphism of degree $p$ of the
 curve and we denote $\xi(X) = X^2 - tX + p$ its minimal polynomial.
 The coefficient $t$ is called the trace of the curve and is closely
 related to the curve order: $\#E(\Fp) = p+1-t$.
-In this work, we are looking for ordinary elliptic curves~\ref{Silv?}
+In this work, we are looking for ordinary elliptic curves
 corresponding to the case where $\End(E)$ is an order of the imaginary
 quadratic field $\Q(\sqrt{t^2-4p})$.
 We denote $-D$ to be the discriminant of $\End(E)$, and $\{\text{Id},\psi\}$
@@ -78,7 +78,7 @@ a basis of the endomorphism ring. The fundamental discriminant
 corresponds to the discriminant of the maximal order containing $\End(E)$.
 This way, $\psi$ is a degree $\frac{D+1}4$ or $D/4$ depending on the
 value of $p$ modulo $4$, and $\psi$ can be defined using polynomials
-of degree $O(D)$ thanks to the Vélu's formulas~\ref{velu}.
+of degree $O(D)$ thanks to the Vélu's formulas~\cite{velu71}.
 Thus, $\psi$ is efficiently computable only for curves of small discriminant.
 For example, for $p\equiv 1$ mod $3$, elliptic curves of $j$-invariant $0$
 have discriminant $-3$ corresponding to $\psi(x,y) = (\beta x, y)$
@@ -90,16 +90,17 @@ In this work, we look for curves of small discriminant in order to
 find a curve defined over the BLS12-381 scalar field where the GLV
 method applies. Moreover, we are looking for secure curves in the
 sense that the curve and its twist are not threaten by subgroup
-attacks~\ref{subgroup-attack, twist-subgroup-attack}, meaning that the
-order of the curve and its quadratic twist has a large prime factor.
+attacks, meaning that the order of the curve and its quadratic twist
+has a large prime factor.
 
 As the endomorphism cost is closely related to the discriminant, we
 restrict to $-D \geq -388$. Moreover, isogenous curve have the same
 order and we can restrict on fundamental discriminants.
 
 We compute an exhaustive search among all the possible discriminant
-($-388 \leq -D \leq -3$) in \href{???}{this file}, and we finally
-obtain an interesting curve for $-D = -2 \cdot 4$.
+($-388 \leq -D \leq -3$) in
+\href{https://github.com/asanso/Bandersnatch/blob/main/code/small-disc-curves.py}{this
+  file}, and we finally obtain an interesting curve for $-D = -2 \cdot 4$.
 It means that the curve has an endomorphism $\psi$ satisfying $\psi^2
 = [-2]$.
 In the next section, we present this curve and several properties
@@ -176,6 +177,6 @@ We performed `python` benchmarks between the double-and-add algorithm and the GL
 \bigskip
 \paragraph*{\textbf{Acknowledgments.}} we would like to thank Luca De Feo, Justin Drake, Dankrad Feist, Daira Hopwood and Zhenfei Zhang for fruitful discussions.
 
-\bibliography{bandersnatch}{}
+\bibliography{bandersnatch,cryptobib/abbrev3,cryptobib/crypto}
 \bibliographystyle{unsrt}
 \end{document}
