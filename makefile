@@ -20,11 +20,11 @@ clean_params:
 	rm -vf code/params-M.py
 	rm -vf code/params-TE.py
 
-pdf: paper/bandersnatch.tex
-	pdflatex -output-directory paper/ bandersnatch.tex
-	cd paper/ && bibtex bandersnatch & cd ..
-	pdflatex -output-directory paper/ bandersnatch.tex
-	pdflatex -output-directory paper/ bandersnatch.tex
+pdf:
+	pdflatex -output-directory paper bandersnatch.tex
+	cd paper && bibtex bandersnatch.aux && cd ..
+	pdflatex -output-directory paper bandersnatch.tex
+	pdflatex -output-directory paper bandersnatch.tex
 
 clean_paper: 
 	rm -vf paper/bandersnatch.aux
