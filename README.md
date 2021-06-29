@@ -15,7 +15,7 @@ We looked for small discriminant curves defined over the prime field
 of characteristic `p` above.
 The command 
 ```shell
-$ sage code/small-disc-curves.py
+$ make curvesearch
 ```
 outputs the possible ordinary curves for `D < 389` (see
 `small-disc-curves.txt` for the output).
@@ -39,7 +39,7 @@ the coefficients for computing this endomorphism.
 Three files (`code/params-W.py`, `code/params-M.py` and
 `code/params-TE.py`) can be generated using
 ```shell
-sage code/get_params.py
+make getparams
 ```
 * In affine Weierstrass coordinates.<br>
 The file `code/params-W.py` contains the curve parameters `p, a, b` such
@@ -72,10 +72,17 @@ We implemented a non-optimized elliptic curve group law arithmetic in
 Our benchmarks lead to a Bandersnatch scalar multiplication ~35%
 faster than on Jubjub.
 This estimation can be reproducible using
-```python3
-$ sage code/bench.py 
+```shell
+$ make bench
 ```
-and testing our methods using
-```python3
-$ sage code/test.py
+and our code can be tested using
+```shell
+$ make test
+```
+
+## Technical details
+We are writing a paper for more technical details. It is still a work
+in progress, available using
+```shell
+make pdf
 ```
