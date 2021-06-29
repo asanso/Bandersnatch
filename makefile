@@ -21,9 +21,8 @@ clean_params:
 	rm -vf code/params-TE.py
 
 pdf: paper/bandersnatch.tex
-	TEXMFOUTPUT="paper"
 	pdflatex -output-directory paper/ bandersnatch.tex
-	bibtex paper/bandersnatch
+	cd paper/ && bibtex bandersnatch & cd ..
 	pdflatex -output-directory paper/ bandersnatch.tex
 	pdflatex -output-directory paper/ bandersnatch.tex
 
