@@ -16,7 +16,7 @@ f.write('p = {}\n\n\n'.format(hex(p)))
 
 discs = []
 
-for D in range(1,100):
+for D in [3,4,5,6,7,8,9,10]:
     D = fundamental_discriminant(-D)
     if not(D in discs):
         discs.append(D)
@@ -27,30 +27,28 @@ for D in range(1,100):
             if not(E.is_supersingular()):
                 print('D = {} = {}'.format(D, D.factor()))
                 f.write('D = {} = {}\n\n'.format(D, D.factor()))
-                OrderE = E.order()
-                FactorsOrderE = OrderE.factor()
-                print('Curve order:\n {}'.format(FactorsOrderE))
-                f.write('Curve order:\n {}\n'.format(FactorsOrderE))
-                print('Curve security:\n {}-bit'.format(
-                    FactorsOrderE[-1][0].nbits()//2
-                ))
-                f.write('Curve security:\n {}-bit\n\n'.format(
-                    (FactorsOrderE[-1][0].nbits()//2)
-                ))
-                OrderEt = E.quadratic_twist().order()
-                FactorsOrderEt = OrderEt.factor()
-                print('Curve order:\n {}'.format(
-                    FactorsOrderEt
-                ))
-                f.write('Curver order:\n {}\n'.format(
-                    FactorsOrderEt
-                ))
-                print('Curve security:\n {}-bit'.format(
-                    FactorsOrderEt[-1][0].nbits()//2
-                ))
-                f.write('Curve security:\n {}-bit\n\n'.format(
-                    FactorsOrderEt[-1][0].nbits()//2
-                ))
+                t = E.trace_of_frobenius()
+                PossibleOrders = [p+1-t, p+1+t]
+                if j == 1728 :
+                    y = ((t**2 - 4 * p)//(-4)).sqrt()
+                    PossibleOrders.append(p+1+2*y)
+                    PossibleOrders.append(p+1-2*y)
+                if j == 0 :
+                    y = ((t**2 - 4 * p)//(-3)).sqrt()
+                    PossibleOrders.append(p+1-(-3*y+t)/2)
+                    PossibleOrders.append(p+1-(-3*y-t)/2)
+                    PossibleOrders.append(p+1-(3*y-t)/2)
+                    PossibleOrders.append(p+1-(3*y+t)/2)
+                for OrderE in PossibleOrders:
+                    FactorsOrderE = OrderE.factor()
+                    print('Curve order:\n {}'.format(FactorsOrderE))
+                    f.write('Curve order:\n {}\n'.format(FactorsOrderE))
+                    print('Curve security:\n {}-bit'.format(
+                        FactorsOrderE[-1][0].nbits()//2
+                    ))
+                    f.write('Curve security:\n {}-bit\n\n'.format(
+                        (FactorsOrderE[-1][0].nbits()//2)
+                    ))
                 print()
                 f.write('\n')
             break
