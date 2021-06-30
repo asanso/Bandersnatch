@@ -6,6 +6,7 @@
 \usepackage[all]{xy}
 \usepackage[foot]{amsaddr}
 \usepackage{xcolor}
+\usepackage{tabularx}
 
 %% \newcommand{\AS}[1]{\color{red}#1\color{black}}
 \newcommand{\SM}[1]{\color{blue}#1\color{black}}
@@ -103,6 +104,26 @@ We compute an exhaustive search among all the possible discriminant
   file}, and we finally obtain an interesting curve for $-D = -2 \cdot 4$.
 It means that the curve has an endomorphism $\psi$ satisfying $\psi^2
 = [-2]$.
+
+
+\begin{table*}[ht]
+    \centering\footnotesize
+    \begin{tabularx}{\textwidth}{ccl}
+        \toprule
+                            
+         \textbf{Discriminant}    & \textbf{Curve security}  & \textbf{Curve Order Factorization} \\
+        \midrule
+        -4  &  59-bit & \tt 2\^{}32 * 5 * 73 * 906349\^{}2 * 254760293\^{}2 \\
+                              &   & \tt  627366603157944049492749525918888037 \\
+        \bottomrule
+    \end{tabularx}
+    \caption{Curve Order Factorization}
+    \label{tab:group-order-factorization}
+\end{table*}
+}
+
+
+
 In the next section, we present this curve and several properties
 related to the  GLV scalar multiplication in this case.
 
