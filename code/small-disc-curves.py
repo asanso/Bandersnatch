@@ -16,7 +16,7 @@ f.write('p = {}\n\n\n'.format(hex(p)))
 
 discs = []
 
-for D in [3,4,5,6,7,8,9,10]:
+for D in range(1,100):
     D = fundamental_discriminant(-D)
     if not(D in discs):
         discs.append(D)
