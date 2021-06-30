@@ -12,10 +12,13 @@ X = FpX.gen()
 j = FpX(H).roots()[0][0]
 
 # Weierstrass curve: y² = x³ + A * x + b
-a=20856223409030707214153620029242927260100058688354534505372746703669794261922
-b=4118395616383396936705917269457205707251888519744679123386326773690169742488
-E = EllipticCurve(Fp,[a,b])
-assert E.j_invariant() == j
+E = EllipticCurve(j=j)
+if not((E.order()//4).is_prime()):
+    # we want its twist, defined with sqrt5 (of Fp²)
+    assert Fp(5).is_square() == False
+    E=EllipticCurve([E.a4() * 5**2, E.a6() * 5**3])
+a = E.a4()
+b = E.a6()
 r = E.order()//4
 assert r.is_prime()
 assert (E.quadratic_twist().order()//(2**7*3**3)).is_prime()
@@ -56,10 +59,11 @@ f.close()
 # Montgomery curve: By² = x³ + A * x² + x
 s = 1/(X**2-(3*alpha**2+a)).roots()[1][0]
 A = 3*alpha*s
-B = 5*s # we multiply by a non-square to be on the right twist
+B = s
 E_m = EllipticCurve([0,A,0,1,0]) # up to the twist
 assert E_m.j_invariant() == j
 assert E_m.quadratic_twist().order() == E.order()
+# because here it is up to the twist
 x2 = E_m.division_polynomial(2).roots()[1][0]
 # A+2*x2 == 2
 c = A+2
