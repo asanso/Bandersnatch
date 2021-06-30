@@ -54,7 +54,7 @@ We performed an exhaustive search of curves where the GLV endomorphism
 could be used over the BLS12-381 scalar field using the Complex
 Multiplication (CM) method of generating an elliptic curve.
 
-\SM{TODO:more details on GLV? Why not possible on Jubjub, etc.}
+\SM{TODO: explain a bit more why GLV is not available on Jubjub, etc.}
 
 \section{Small discriminant curves}
 
@@ -207,16 +207,11 @@ related to the  GLV scalar multiplication in this case.
 
 \section{Bandersnatch} 
 
-\SM{TODO: add parameters for weierstrass so that people can use sagemath
-  easily to create the curve and see its order.}
-
 The Bandersnatch curve can be represented in the Weierstrass model
 using the following parameters:
 \begin{verbatim}
-p=52435875175126190479447740508185965837690552500527637822603658699938581184513
-a=20856223409030707214153620029242927260100058688354534505372746703669794261922
-b=4118395616383396936705917269457205707251888519744679123386326773690169742488
-E=EllipticCurve(GF(p), [a,b])
+p=0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001
+E=EllipticCurve(GF(p), [-3763200000, -78675968000000])
 \end{verbatim}
 This curve has discriminant $-8$, and $j$-invariant $8000$. It means
 that $8000$ is a root of the Hilbert class polynomial $H_{-8}$.
@@ -235,11 +230,10 @@ The different attacks on the Bandersnatch curve lead to $125.75$ bits
 of security.
 
 From that, we exhibit the degree $2$ endomorphism in Twisted Edwards
-coordinates:
+coordinates (where $a_i, b_i, c_i \in \Fp$):
 $$\psi(x,y,z) = (xa_1(y+a_2z)(y+a_3z), b_1(y+b_2z)(y+b_3z)yz^2,
-(y+c_1z)(y+c_2z)yz^2) \qquad a_i, b_i, c_i \in \Fp.$$
+(y+c_1z)(y+c_2z)yz^2).$$
 This map can be computed in 17 multiplications and 6 additions modulo $p$.
-
 A twisted Edwards curve is always birationally equivalent to a
 Montgomery curve.
 While the Twisted Edwards model fits better for $\mathbb F_p$ circuit
@@ -247,8 +241,8 @@ arithmetic, we provide here the Montgomery version because the scalar
 multiplication is more efficient in this context.
 $$E_\text{M}: By^2 = x^3 + Ax^2 + x$$
 \begin{align*}
-  B &= \text{\small{43133420749626800644911662702407007968989685651477499770299667990488723916667}}\\
-  A &= \text{\small{29978822694968839326280996386011761570173833766074948509196803838190355340952}}.
+  B &= \text{\small{\tt 0x300c3385d13bedb7c9e229e185c4ce8b1dd3b71366bb97c30855c0aa41d62727}}\\
+  A &= \text{\small{\tt 0x4247698f4e32ad45a293959b4ca17afa4a2d2317e4c6ce5023e1fd63d1b5de98}}.
 \end{align*}
 
 
