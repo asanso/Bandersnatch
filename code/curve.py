@@ -129,3 +129,37 @@ class Point():
 
     def clear_cofactor(self):
         return self.scalar_mul(self.curve.cofactor)
+
+    def print(self, hex_flag=False, affine=False):
+        if affine:
+            x = self.x/self.z
+            y = self.y/self.z
+            z = 1
+        else:
+            x = self.x
+            y = self.y
+            z = self.z
+
+        print("x:", x)
+        print_fq(x, hex_flag)
+        print("y:", y)
+        print_fq(y, hex_flag)
+        print("z:", z)
+        print_fq(z, hex_flag)
+            
+
+
+
+def print_fq(a, hex_flag=False):
+    a = ZZ(a)
+    a1 = a % (2**64)
+    a = a >> 64
+    a2 = a % (2**64)
+    a = a >> 64
+    a3 = a % (2**64)
+    a = a >> 64
+    a4 = a % (2**64)
+    if hex:
+        print(hex(a1), hex(a2), hex(a3), hex(a4))
+    else:
+        print(a1, a2, a3, a4)
