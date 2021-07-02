@@ -1,6 +1,6 @@
 import random
 from curve import Curve
-from bandersnatch import Bandersnatch
+from bandersnatch import Bandersnatch, BandersnatchPoint
 
 ###
 # tests for the Curve class on the Jubjub curve
@@ -68,6 +68,10 @@ C = Bandersnatch(p, a, d, L, r, cofactor, a1,a2,a3, b1,b2,b3, c1,c2)
 
 P = C.random_point()
 Q = C.random_point()
+
+# P.print()
+G = C.generator()
+G.print(affine=True,hex_flag=True)
 
 # psi
 R = P.psi()

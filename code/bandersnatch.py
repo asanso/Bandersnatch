@@ -36,6 +36,15 @@ class Bandersnatch(Curve):
     def point_of_order_r(self):
         P = super().point_of_order_r()
         return BandersnatchPoint(P.x, P.y, P.z, self)
+
+    def generator(self):
+        p=52435875175126190479447740508185965837690552500527637822603658699938581184513
+        Fp=FiniteField(p)
+        x = Fp(13738737789055671334382939318077718462576533426798874551591468520593954805549)
+        y = Fp(11575885077368931610486103676191793534029821920164915325066801506752632626968)
+        z = Fp(14458123306641001284399433086015669988340559992755622870694102351476334505845)
+        return BandersnatchPoint(x, y, z, self)
+
     
 class BandersnatchPoint(Point):
     
