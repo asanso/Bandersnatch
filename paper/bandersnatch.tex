@@ -18,7 +18,10 @@
 \newcommand{\Fp}{\ensuremath{\mathbb F_p}}
 \newcommand{\End}{\ensuremath{\text{End}}}
 
+\theoremstyle{definition}
 \newtheorem*{remark}{Remark}
+\newtheorem*{example}{Example}
+
 
 \title{Bandersnatch: a fast elliptic curve built over the BLS12-381 scalar field.}
 \author{Simon Masson and Antonio Sanso}
@@ -35,106 +38,143 @@
  built over the BLS12-381~\cite{bls12381} scalar field. The curve is
  similar to Jubjub~\cite{jubjub} but is equipped with an efficient
  endomorphism, allowing a fast scalar multiplication algorithm.
- \end{abstract}
+\end{abstract}
+
+\SM{Add refs: CM method, Silverman hasse bound, number theory orders
+  quad im field, twisted
+edwards curves (eprint with group law $a=-1$?), montgomery curve (smith)}
+
 
 \section{Introduction}
 %BLS12-381
-BLS12-381 is a pairing friendly curve created by Sean Bowe in
+BLS12-381 is a pairing-friendly curve created by Sean Bowe in
 2017~\cite{bls12381}.
 Currently, BLS12-381 is universally used for digital
 signatures and zero-knowledge proofs by many project orbiting in the
 blockchin universe: Zcash, Ethereum 2.0, Skale, Algorand, Dfinity,
 Chia, and more.
 %jubjub
-The ZCash team also introduced a new curve built over the BLS12-381
-scalar field Jubjub~\cite{jubjub}: a twisted Edwards curve that can
-be made efficient inside of the zk-SNARK circuit.
+The ZCash team also introduced another curve called
+Jubjub~\cite{jubjub}, built over the BLS12-381 scalar field $\mathbb
+F_{r_\text{BLS}}$.
+This curve is not pairing-friendly, but leads to constructions where
+$\mathbb F_{r_\text{BLS}}$ arithmetic circuits can be manipulated
+using the BLS12-381 curve.
+The Jubjub curve can be represented in the twisted Edwards
+coordinates, allowing efficiency inside ZK-SNARK circuits.
 In order for some cryptographic application to scale, it is needed to
-have a curve like Jubjub but with a faster scalar multiplication.
-One efficient way to speed scalar multiplication up is to employ the
-celebrated GLV method~\cite{C:GalLamVan01} (also used by the “Bitcoin
-curve” - secp256k1).
-This technique was until few months ago protected by a US Patent that
-is now expired and freely usable.
+have efficient scalar multiplication on the non-pairing-friendly
+curve.
+The main drawback of Jubjub is the slow scalar multiplication
+algorithm, compared for example with the ``Bitcoin curve''
+(SECP256k1).
+It comes from the fact that the curve does not have an efficiently
+computable endomorphism, necessary for computing scalar
+multiplications using the GLV method~\cite{C:GalLamVan01} (a technique
+protected by a US patent intil few months ago, but that expired and is
+freely usable now).
 
 \paragraph{Our contribution.}
 The Jubjub curve is a curve with a large discriminant, meaning that
 the GLV method is not possible on this curve.
 We performed an exhaustive search of curves of small discriminant,
 defined over the BLS12-381 scalar field. This way, we obtain an
-elliptic using the Complex Multiplication (CM) method, and an
-efficient scalar multiplication using the GLV method.
+elliptic using the Complex Multiplication method, where the scalar
+multiplication algorithm is efficient thanks to the GLV
+method~\cite{C:GalLamVan01}.
 
 \paragraph{Organization of the paper.}
 In Section~\ref{sec:small-disc-curves}, we describe how we obtained
-several curves allowing the GLV method, together with cryptographic
+several curves allowing the GLV method together with cryptographic
 security.
 Then, we introduce in Section~\ref{sec:bandersnatch} the Bandersnatch
 curve in different models (in Weierstrass, Montgomery and Twisted Edwards
 coordinates).
 Finally, we compare the scalar multiplication algorithm over
 the Bandersnatch and the Jubjub curves in
-Section~\ref{sec:comparison}.
+Section~\ref{sec:comparison} in a practical point of view.
 
 
 \section{Small discriminant curves}\label{sec:small-disc-curves}
 
 The GLV method~\cite{C:GalLamVan01} is a well known trick for accelerating the
 scalar multiplication over particular curve. In a nutshell, it applies
-to elliptic curves endowed with an efficiently computable endomorphism
-$\psi$.
-Generally, the $j=0$ and $1728$ curves are used because non-trivial
-automorphisms fit very well, but it also applies for other curves, as
-we will see in this section.
+to elliptic curves where an endomorphism $\psi$ can be efficiently computed.
+The GLV method applies in particular for $j=0$ (resp. $1728$) curves
+because a non-trivial automorphism can be computed using only one
+modular multiplication (see Example~\ref{ex:psi-j0}).
+The method also applies for other curves where the endomorphism is
+slightly more expensive, called \emph{small discriminant} curves.
 
 % notations
-Let $E$ be an elliptic curve defined over $\Fp$. The Frobenius
-map $(x,y)\mapsto (x^p,y^p)$ is an endomorphism of degree $p$ of the
-curve and we denote $\xi(X) = X^2 - tX + p$ its minimal polynomial.
-The coefficient $t$ is called the trace of the curve and is closely
-related to the curve order: $\#E(\Fp) = p+1-t$.
-In this work, we are looking for ordinary elliptic curves
-corresponding to the case where $\End(E)$ is an order of the imaginary
-quadratic field $\Q(\sqrt{t^2-4p})$.
-We denote $-D$ to be the discriminant of $\End(E)$, and $\{\text{Id},\psi\}$
-a basis of the endomorphism ring. The fundamental discriminant
-corresponds to the discriminant of the maximal order containing $\End(E)$.
+Let $E$ be an elliptic curve defined over $\Fp$ of trace $t$. $E$ and
+its quadratic twist $E^t$ are $\mathbb F_{p^2}$-isomorphic curves and
+their order over $\Fp$ is given by the formula
+$$\#E(\Fp) = p+1-t\qquad \#E^t(\Fp) = p+1+t.$$
+In this work, we are looking for cryptographic applications based on
+ordinary elliptic curves, meaning that we look for $t\not\equiv 0
+\bmod p$. The endomorphism ring of these curves have a particular
+structure: $\End(E)$ is an order of the imaginary quadratic field
+$\Q(\sqrt{t^2-4p})$.
+From now, we denote $-D$ to be the discriminant of $\End(E)$, and
+$\{\text{Id},\psi\}$ a basis of the endomorphism ring.
+The fundamental discriminant corresponds to the discriminant of the
+maximal order containing $\End(E)$.
 This way, $\psi$ is a degree $\frac{D+1}4$ or $D/4$ depending on the
-value of $p$ modulo $4$, and $\psi$ can be defined using polynomials
+value of $D$ modulo $4$, and $\psi$ can be defined using polynomials
 of degree $O(D)$ thanks to the Vélu's formulas~\cite{velu71}.
-Thus, $\psi$ is efficiently computable only for curves of small discriminant.
-For example, for $p\equiv 1$ mod $3$, elliptic curves of $j$-invariant $0$
-have discriminant $-3$ corresponding to $\psi(x,y) = (\beta x, y)$
-where $\beta$ is an order $3$ element of $\Fp$.
-In this particular case, the endomorphism $\psi$ can be evaluated
-using only one mulltiplication in $\Fp$.
+Thus, the evaluation of $\psi$ is efficient only for curves of small
+discriminant.
 
-In this work, we look for curves of small discriminant in order to
-find a curve defined over the BLS12-381 scalar field where the GLV
-method applies. Moreover, we are looking for secure curves in the
-sense that the curve and its twist are not threaten by subgroup
-attacks, meaning that the order of the curve and its quadratic twist
-has a large prime factor.
+\begin{example}\label{ex:psi-j0}
+  Let $p\equiv 1$ mod $3$, and $E:y^2=x^3+1$.
+  $E$ has discriminant $-3$ and $\End(E) \simeq
+  \Z\left[\frac{1+\sqrt{-3}}{2}\right]$. The endomorphism $\psi$
+  corresponding to $\frac{1+\sqrt{-3}}2$ can be
+    computed as $\psi(x,y) = (\beta x, y)$ where $\beta$ is an order
+    $3$ element of $\Fp$.
+\end{example}
+
+In this work, we restrict to curves defined over the BLS12-381 scalar
+field, and also look for cryptographic security. Curves with $-D=-3$
+and $-4$ do not have a large prime subgroup defined over $\Fp$. Hence,
+we look for small discriminant $-D<-4$ curves with subgroup and
+twist-subgroup security. It means that $\#E(\Fp)$ has a roughly 256-bit
+prime factor, as well as $\#E^t(\Fp)$.
 
 As the endomorphism cost is closely related to the discriminant, we
-restrict to $-D \geq -388$. Moreover, isogenous curve have the same
-order and we can restrict on fundamental discriminants.
+restrict to $-D \geq -388$ so that $\psi$ can be efficiently computed.
+Moreover, we restrict on fundamental discriminants:
+\begin{itemize}
+  \item Fundamental discriminants are the discriminant of the maximal
+    orders of imaginary quadratic fields. We denote $O_{-D}$ the
+    maximal order of discriminant $-D$.
+  \item Elliptic curves with $\End(E) \subset O_{-D}$ are isogenous
+    curves, meaning that there is a rational map between them.
+  \item Isogenous curves have the same order so that we can restrict
+    on fundamental discriminants for our search.
+\end{itemize}
 
-We compute an exhaustive search among all the possible discriminant
-($-292 \leq -D \leq -3$). Given a discriminant $-D$, roughly half of
-the curves are supersingular and hence not interesting for our
-cryptographic applications. We list in
-Table~\ref{tab:group-order-factorization} the ordinary curves of small
-discriminant. The generation of these curves is reproducible using~\href{https://github.com/asanso/Bandersnatch/blob/main/code/small-disc-curves.py}{this
+We compute an exhaustive search among all the possible (fundamental)
+discriminants ($-292 \leq -D \leq -3$).
+Given a discriminant $-D$, roughly half of the curves are
+supersingular and hence not interesting for our cryptographic
+applications.
+We list in Table~\ref{tab:group-order-factorization} the ordinary
+curves we obtained.
+The generation of these curves is reproducible
+using~\href{https://github.com/asanso/Bandersnatch/blob/main/code/small-disc-curves.py}{this
   file}.
-We finally obtain an interesting curve for $-D = -8$, meaning that the
-curve has an endomorphism $\psi$ satisfying $\psi^2 = [-2]$.
+We finally obtain an interesting curve for $-D = -8$ with large prime
+order subgroups on both the curve and its twist.
+We presente in Section~\ref{sec:bandersnatch} the curve in several
+models, together with the endomorphism in order to apply the GLV
+scalar multiplication algorithm.
 
 \begin{table*}[!ht]
     \centering\footnotesize
     \begin{tabularx}{\textwidth}{ccl}
-        \toprule
-                            
+        \toprule                            
         $\mathbf{-D}$    & \textbf{Curve sec.}  & \textbf{Curve order} \\
         \midrule        
 $-3$ & $65$-bit & $2^{2}  \cdot 3  \cdot 97  \cdot 19829809  \cdot 2514214987  \cdot 423384683867248993  \cdot p_{131}$\\
@@ -186,35 +226,32 @@ $-292$ & $92$-bit & $2  \cdot 54983  \cdot 5220799  \cdot 2671917733  \cdot p_{1
     \label{tab:group-order-factorization}
 \end{table*}
 
-In the next section, we present this curve and several properties
-related to the  GLV scalar multiplication in this case.
-
-\SM{TODO: explain our algorithm for finding curves, subgroup and twist
-  security.}
-
-\SM{TODO: not defined: quadratic twist, isogenous curves, fundamental
-  discriminant.}
-
 \section{Bandersnatch}\label{sec:bandersnatch}
 
 The Bandersnatch is obtained from a discriminant $-D = -8$, meaning
-that its $j$-invariant is a root of the Hilbert class polynomial
-$H_{-8}(X) = X-8000$.
-From the $j$-invariant, it is easy to obtain the equation of
-Bandersnatch (or its quadratic twist).
-We provide in this section several representations of Bandersnatch.
+that the endomorphism ring is $\Z[\sqrt{-2}]$.
+We obtain the curve $j$-invariant using the Complex Multiplication
+method, based on the Hilbert class polynomial $H_{-D}(X)$, where
+$\text{Ell}_{-D}$ denotes the set of elliptic curves of endomorphism
+ring of discriminant $-D$.
+Using SageMath, one obtains that the Bandersnatch $j$-invariant is
+$8000$ using \texttt{hilbert\_class\_polynomial(-8).roots()}.
+From the $j$-invariant, we can obtain the curve equation in different
+models. Before looking into details three different representations,
+we briefly recall how to exhibit the degree $2$ endomorphism $\psi$.
 
-\paragraph{Security of Bandersnatch.}
-The bandersnatch curve order is $2^2\cdot r$ for a $253$-bit long
-prime $r$.
-% 13108968793781547619861935127046491459309155893440570251786403306729687672801
-The quadratic twist of $E_\text{TE}$ has order
-$2^7 \cdot 3^3 \cdot r'$, where $r'$ is another prime of $244$ bits.
-%15172417585395309745210573063711216967055694857434315578142854216712503379
-Hence, the Bandersnatch curve satisfies twist security after a quick cofactor
-check.
-The different attacks on the Bandersnatch curve subgroups lead to $125.75$ bits
-of security.
+\paragraph{Degree 2 endomorphism.}
+The endomorphism $\psi$ has a kernel generated by a $2$-torsion
+point. Hence, we can obtain the rational maps defining $\psi$ by
+looking at the curves $2$-isogenous to Bandersnatch. Only one has the
+same $j$-invariant (which is $8000$, the unique root of the
+$j$-invariant $8000$, meaning that up to an isomorphism, the Vélu's
+formulas~\cite{velu71} let us obtain compute $\psi$. More details can
+be found
+in~\href{https://github.com/asanso/Bandersnatch/blob/main/code/get\_params.py}{this
+  file}.
+
+\SM{talk about the eigen value somewhere}
 
 \subsection{Weierstrass curve}
 The Bandersnatch curve can be represented in the Weierstrass model
@@ -227,19 +264,33 @@ E=EllipticCurve(GF(p), [-3763200000, -78675968000000])
 \begin{remark}
   Using SageMath, \texttt{EllipticCurve\_from\_j(8000)} computes a
   Weierstrass equation of the quadratic twist of Bandersnatch.
-  Bandersnatch using
+  Bandersnatch can then be obtained using
   \texttt{EllipticCurve\_from\_j(8000).quadratic\_twist()}.
 \end{remark}
 
-\subsection{Twisted Edwards curve}
-It can also be represented in Twisted Edwards coordinates.
-In this model, the Bandersnatch curve can be defined by the equation
-$$E_\text{TE}:-5x^2+y^2 = 1 + \frac{138827208126141220649022263972958607803}{171449701953573178309673572579671231137}x^2y^2$$ 
+The endomorphism $\psi$ can obtained using the method described above.
+Finally,
+$$\psi_\text{W}(x,y) = \left(u^2\cdot \frac{x^2+r_1x+r_0}{x+s_0}, u^3\cdot
+y\cdot \frac{x^2+t_1x+t_0}{(x+s_0)^2}\right)$$
+for coefficients $u, r_0, r_1, s_0, t_0, t_1$ given in the
+\texttt{params-W.py} file in our repository.
 
-From that, we exhibit the degree $2$ endomorphism in Twisted Edwards
-coordinates (where $a_i, b_i, c_i \in \Fp$):
-$$\psi(x,y,z) = (xa_1(y+a_2z)(y+a_3z), b_1(y+b_2z)(y+b_3z)yz^2,
+\subsection{Twisted Edwards curve}
+Bandersnatch can also be represented in Twisted Edwards coordinates.
+In this model, the Bandersnatch curve can be defined by the equation
+$$E_\text{TE}:-5x^2+y^2 = 1 +
+\frac{138827208126141220649022263972958607803}{171449701953573178309673572579671231137}x^2y^2$$
+Twisted Edwards representation is more efficient using a coefficient
+$a = -1$, but our curve is not on this form because $-5$ is not a
+square in $\Fp$. Finally, the curve $-x^2+y^2 = 1 -dx^2y^2/5$ is the quadratic
+twist of Bandersnatch.
+
+From this representation, we exhibit the degree $2$ endomorphism in
+Twisted Edwards coordinates:
+$$\psi_\text{TE}(x,y,z) = (xa_1(y+a_2z)(y+a_3z), b_1(y+b_2z)(y+b_3z)yz^2,
 (y+c_1z)(y+c_2z)yz^2).$$
+Again, the coefficients $a_i, b_i, c_i \in \Fp$ can be obtained in the
+\texttt{params-TE.py} in our repository.
 This map can be computed in 17 multiplications and 6 additions modulo $p$.
 A twisted Edwards curve is always birationally equivalent to a
 Montgomery curve.
@@ -253,25 +304,56 @@ $$E_\text{M}: By^2 = x^3 + Ax^2 + x$$
   B &= \text{\small{\tt 0x300c3385d13bedb7c9e229e185c4ce8b1dd3b71366bb97c30855c0aa41d62727}}\\
   A &= \text{\small{\tt 0x4247698f4e32ad45a293959b4ca17afa4a2d2317e4c6ce5023e1fd63d1b5de98}}.
 \end{align*}
+Montgomery curves allow efficient scalar multiplication using the
+Montgomery ladder. We provide here the endomorphism $\psi$ in this
+representation:
+$$\psi_\text{M}(x,z) = (-(x-z)^2 - cxz, 2xz)$$
+The parameter $c$ is provided in the file \texttt{params-M.py} in our
+repository.
+
+\subsection{Security of Bandersnatch}
+
+The bandersnatch curve order is $2^2\cdot r$ for a $253$-bit long
+prime $r$.
+% 13108968793781547619861935127046491459309155893440570251786403306729687672801
+Its quadratic twist has order
+$2^7 \cdot 3^3 \cdot r'$, where $r'$ is another prime of $244$ bits.
+%15172417585395309745210573063711216967055694857434315578142854216712503379
+Hence, the Bandersnatch curve satisfies twist security after a quick cofactor
+check.
+We estimate that the Bandersnatch curve (resp. its quadratic twist)
+has $126$ bits of security (resp. $122$ bits of security).
 
 
 \section{Comparison}\label{sec:comparison}
 
-\SM{TODO: talk about $a=-1$ vs $a=-5$, and give more precise complexity
-analysis and benchmarks.}
-
 %### Scalar multiplication improvement
-From the efficient endomorphism $\psi$, it is easy to apply the GLV method and improve the scalar multiplication cost:
-Roughly, a scalar multiplication $[n]P$ cost $(\log n) \text{Dbl} + (\log n/2) \text{Add}$.
-Using the GLV endomorphism, we can compute $[n]P$ using $(\log n/2 )\text{Dbl} + (3\log n/8) \text{Add}$, plus few precomputations.
+The twisted Edwards representation is very used in practice, and we
+now focus on the comparison between Jubjub and Bandersnatch in this
+model.
 
-We performed `python` benchmarks between the double-and-add algorithm and the GLV method applied in the case of our curve, and the GLV version is about 30\% faster 
-\footnote{Source code \url{https://github.com/asanso/Bandersnatch/}.}
+\paragraph{Jubjub scalar multiplication.}
+Because of its large discriminant, the scalar multiplication on Jubjub
+is a basic double-and-add algorithm, meaning that it computes a
+multiplication by $n$ in $\log n$ doublings and $\log n/2$
+additions (in average) on the curve. 
 
-\SM{Rust benchmarks will be available soon!}
+\paragraph{Bandersnatch scalar multiplication.}
+The endomorphism $\psi$ lets us compute the scalar multiplication
+faster than a double-and-add algorithm with few precomputations. For a
+point $P$ and a scalar $n$, we first evaluate $\psi$ at $P$ and
+decompose $n = n_1 + \lambda n_2$. Then a multi scalar multiplication
+is computed in $\log n/2$ doublings and $3\log n/8$ additions (in average) on the curve.
+
+\paragraph{Benchmarks.}
+The \href{https://github.com/zhenfeizhang/bandersnatch-glv}{Rust implementation} of the Bandersnatch scalar multiplication
+algorithm confirms our estimations: the GLV method is $40\%$ faster
+than the Jubjub implementation.
 
 \bigskip
-\paragraph*{\textbf{Acknowledgments.}} we would like to thank Luca De Feo, Justin Drake, Dankrad Feist, Daira Hopwood and Zhenfei Zhang for fruitful discussions.
+\paragraph*{\textbf{Acknowledgments.}} we would like to thank Luca De
+Feo, Justin Drake, Dankrad Feist, Daira Hopwood and Zhenfei Zhang for
+fruitful discussions.
 
 \bibliography{bandersnatch,cryptobib/abbrev3,cryptobib/crypto}
 \bibliographystyle{unsrt}
