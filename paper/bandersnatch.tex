@@ -24,13 +24,19 @@
 \newtheorem*{example}{Example}
 
 
-\title{Bandersnatch: a fast elliptic curve built over the BLS12-381 scalar field.}
-\author{Simon Masson and Antonio Sanso and Zhenfei Zhang}
+\title{Bandersnatch: a fast elliptic curve built over the BLS12-381
+  scalar field}
+\author{Simon Masson, Antonio Sanso and Zhenfei Zhang}
 %\address{Heliax}
-%\author{Antonio Sanso}
 %\address{Ethereum Foundation and Ruhr Universit{\"a}t Bochum}
 
+\makeatletter
+\newcommand{\verbatimfont}[1]{\renewcommand{\verbatim@font}{\ttfamily#1}}
+\makeatother
+
 \begin{document}
+
+\verbatimfont{\small}%
 
 \maketitle
 \medskip
@@ -43,11 +49,6 @@
  and the size of R1CS constraints is XX \% smaller, 
  compared to those of the Jubjub Curve.
 \end{abstract}
-
-\SM{Add refs: CM method, Silverman hasse bound, number theory orders
-  quad im field, twisted
-edwards curves (eprint with group law $a=-1$?), montgomery curve (smith)}
-
 
 \section{Introduction}
 %BLS12-381
@@ -136,8 +137,10 @@ slightly more expensive, called \emph{small discriminant} curves.
 % notations
 Let $E$ be an elliptic curve defined over $\Fp$ of trace $t$. $E$ and
 its quadratic twist $E^t$ are $\mathbb F_{p^2}$-isomorphic curves and
-their order over $\Fp$ is given by the formula
+their orders over $\Fp$ are closely related with the trace
+$t$:
 $$\#E(\Fp) = p+1-t\qquad \#E^t(\Fp) = p+1+t.$$
+See~\cite{Silverman86} for a complete introduction to elliptic curves.
 In this work, we are looking for cryptographic applications based on
 ordinary elliptic curves, meaning that we look for $t\not\equiv 0
 \bmod p$. The endomorphism ring of these curves have a particular
@@ -281,36 +284,50 @@ $$\lambda = \text{\small{\tt
 By construction, $\psi$ is the endomorphism $\sqrt{-2}\in \mathcal
 O_{-8}$. Thus, $\lambda$ satisfies
 $\lambda^2+2 = 0 \bmod p_{253}$.
-More details can be found
-in~\href{https://github.com/asanso/Bandersnatch/blob/main/code/get\_params.py}{this
+In the following sections, we provide details on the curve equation,
+the $\psi$ rational maps, and a generator of the $p_{253}$-order
+subgroup in the case of the affine Weierstrass, projective Montgomery
+and projective twisted Edwards representations.
+The parameters can be obtained using the script
+of~\href{https://github.com/asanso/Bandersnatch/blob/main/code/get\_params.py}{this
   file}.
-We give the rational maps defining $\psi$ in three different
-models in the next sections.
 
 \subsection{Weierstrass curve}
+\paragraph{Curve equation.}
 The Bandersnatch curve can be represented in the Weierstrass model
-using the following parameters:
+using the equation
+$$E_W:y^2 = x^3 -3763200000x -78675968000000.$$
+%% \begin{verbatim}
+%% p=0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001
+%% E=EllipticCurve(GF(p), [-3763200000, -78675968000000])
+%% \end{verbatim}
+
+%% \begin{remark}
+%%   Using SageMath, \texttt{EllipticCurve\_from\_j(8000)} computes a
+%%   Weierstrass equation of the quadratic twist of Bandersnatch.
+%%   Bandersnatch can then be obtained using
+%%   \texttt{EllipticCurve\_from\_j(8000).quadratic\_twist()}.
+%% \end{remark}
+
+\paragraph{Endomorphism.}
+The endomorphism $\psi$ can obtained using the method detailed above.
+Using the coefficients $u, r_0, r_1, s_0, t_0, t_1$ of the file
+\texttt{params-W.py} in our repository, we obtain that
+$$\psi_\text{W}(x,y) = \left(u^2\cdot \frac{x^2+r_1x+r_0}{x+s_0}, u^3\cdot
+y\cdot \frac{x^2+t_1x+t_0}{(x+s_0)^2}\right).$$
+
+\paragraph{Subgroup generator.}
+A generator of the $p_{253}$-order subgroup is given by $E_W(x_W,y_W)$
+where:
 \begin{verbatim}
-p=0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001
-E=EllipticCurve(GF(p), [-3763200000, -78675968000000])
+  xW=0x72d12dcb2520ddddb7d26e93ac255607af27811e6b44745088b40f5c9877bfe6
+  yW=0x3379226315f3a722de23fc393216ca709b7f5ca335173f5c44e39f9c7e73f029.
 \end{verbatim}
 
-\begin{remark}
-  Using SageMath, \texttt{EllipticCurve\_from\_j(8000)} computes a
-  Weierstrass equation of the quadratic twist of Bandersnatch.
-  Bandersnatch can then be obtained using
-  \texttt{EllipticCurve\_from\_j(8000).quadratic\_twist()}.
-\end{remark}
-
-The endomorphism $\psi$ can obtained using the method described above.
-Finally,
-$$\psi_\text{W}(x,y) = \left(u^2\cdot \frac{x^2+r_1x+r_0}{x+s_0}, u^3\cdot
-y\cdot \frac{x^2+t_1x+t_0}{(x+s_0)^2}\right)$$
-for coefficients $u, r_0, r_1, s_0, t_0, t_1$ given in the
-\texttt{params-W.py} file in our repository.
-
 \subsection{Twisted Edwards curve}
-Bandersnatch can also be represented in Twisted Edwards coordinates.
+\paragraph{Curve equation.}
+Bandersnatch can also be represented in twisted Edwards coordinates,
+where the group law is complete.
 In this model, the Bandersnatch curve can be defined by the equation
 $$E_\text{TE}:-5x^2+y^2 = 1 +
 \frac{138827208126141220649022263972958607803}{171449701953573178309673572579671231137}x^2y^2$$
@@ -318,33 +335,55 @@ Twisted Edwards group law is more efficient with a coefficient
 $a = -1$ (see~\cite{AC:HWCD08} for details).
 In our case, $-5$ is not a square in $\Fp$. Thus, the curve with
 equation $-x^2+y^2 = 1 -dx^2y^2/5$ is the quadratic twist of
-Bandersnatch.
+Bandersnatch. We provide a representation with $a=-5$, leading to a
+slightly more expensive group law because multiplying by $-5$ is more
+expensive than a multiplication by $-1$, but this cost will be
+neglected compared to the improvement of the GLV method. See
+Section~\ref{sec:comparison} for details.
 
+\paragraph{Endomorphism.}
 From this representation, we exhibit the degree $2$ endomorphism in
-Twisted Edwards coordinates:
+twisted Edwards coordinates, where $a_i, b_i, c_i \in \Fp$ are
+coefficients available in the file \texttt{params-TE.py} in our repository:
 $$\psi_\text{TE}(x,y,z) = (xa_1(y+a_2z)(y+a_3z), b_1(y+b_2z)(y+b_3z)yz^2,
 (y+c_1z)(y+c_2z)yz^2).$$
-Again, the coefficients $a_i, b_i, c_i \in \Fp$ can be obtained in the
-\texttt{params-TE.py} in our repository.
 This map can be computed in 17 multiplications and 6 additions modulo $p$.
-A twisted Edwards curve is always birationally equivalent to a
-Montgomery curve.
+
+\paragraph{Subgroup generator.}
+The generator of the $p_{253}$-order subgroup has twisted coordinates
+of the form $E_\text{TE}(1,y_\text{TE},1)$ with
+\begin{verbatim}
+yTE=0x32d4bac40a83da96b79a8024a7ba3a053d05c979c0c234d853a5547a5f0a3a20.
+\end{verbatim}
 
 \subsection{Montgomery curve}
-While the Twisted Edwards model fits better for $\mathbb F_p$ circuit
-arithmetic, we provide here the Montgomery version because the scalar
-multiplication is more efficient in this context.
-$$E_\text{M}: By^2 = x^3 + Ax^2 + x$$
-\begin{align*}
-  B &= \text{\small{\tt 0x300c3385d13bedb7c9e229e185c4ce8b1dd3b71366bb97c30855c0aa41d62727}}\\
-  A &= \text{\small{\tt 0x4247698f4e32ad45a293959b4ca17afa4a2d2317e4c6ce5023e1fd63d1b5de98}}.
-\end{align*}
+\paragraph{Curve equation.}
+A twisted Edwards curve is always birationally equivalent to a
+Montgomery curve. We obtain the mapping between these two
+representations following~\cite{JCEng:CosSmi18}.
+While the twisted Edwards model fits better for $\mathbb F_p$ circuit
+arithmetic and more generally for the zero-knowledge proof context, we
+provide here the Montgomery version because the scalar multiplication
+is more efficient in this model:
+$$E_M: By^2 = x^3 + Ax^2 + x$$
+\begin{verbatim}
+B=0x300c3385d13bedb7c9e229e185c4ce8b1dd3b71366bb97c30855c0aa41d62727
+A=0x4247698f4e32ad45a293959b4ca17afa4a2d2317e4c6ce5023e1fd63d1b5de98.
+\end{verbatim}
+
+\paragraph{Endomorphism.}
 Montgomery curves allow efficient scalar multiplication using the
 Montgomery ladder. We provide here the endomorphism $\psi$ in this
-representation:
-$$\psi_\text{M}(x,z) = (-(x-z)^2 - cxz, 2xz)$$
-The parameter $c$ is provided in the file \texttt{params-M.py} in our
-repository.
+model (where $c$ can be found in the file \texttt{params-M.py} in our
+repository):
+$$\psi_\text{M}(x,-,z) = (-(x-z)^2 - cxz, -, 2xz)$$
+
+\paragraph{Subgroup generator.}
+The generator of the $p_{253}$-order subgroup given above is of the
+form $E_M(x_M,-,1)$ with:
+\begin{verbatim}
+xM=0x6ade1c48fe482c38f81e8290a35de4c2b009e11f8c33a227c3ea0f6bd1afb8c6.
+\end{verbatim}
 
 \subsection{Security of Bandersnatch}
 
@@ -432,7 +471,8 @@ performance for Bandersnatch curve, compared to
 the 
 Jubjub curve, due to the slightly larger coefficient 
 $a$ ($-5$ v.s. $-1$), 
-and slightly larger scalar field (255 vs 254 bits (\ZZ{is this correct?})).
+and slightly larger scalar field (255 vs 254 bits (\ZZ{is this
+  correct?} \SM{almost: $253$ vs $252$})).
 When GLV is enabled, we report a 45\% improvement of Bandersnatch curve
 itself, and a 42\% improvement over the Jubjub curve.
 
