@@ -82,17 +82,17 @@ f.write('u=Fp({})\n'.format(u))
 f.close()
 
 # Twised Edwards curve: a * x² + y² = 1 + d * x² * y²
-a = (A+2)/B
-d = (A-2)/B
+a_TE_0 = (A+2)/B
+d_TE_0 = (A-2)/B
 # We find nice a and d.
 # We cannot put it in a=-1 form because it reaches the twist.
 # a=-5 is possible.
-d = -5*d/a
-a = Fp(-5)
-M = Matrix([[ZZ(d),1],[p,0]])
+d_TE = -5*d_TE_0/a_TE_0
+a_TE = Fp(-5)
+M = Matrix([[ZZ(d_TE),1],[p,0]])
 N = M.LLL()
 d1,d2=N[0]
-assert Fp(d1/d2) == d
+assert Fp(d1/d2) == d_TE
 
 '''
 Twisted Edwards point (x,y)
@@ -136,10 +136,10 @@ f.write('# Twisted Edwards parameters\n')
 f.write('p={}\n'.format(p))
 f.write('Fp=FiniteField(p)\n')
 f.write('# curve equation coefficients\n')
-f.write('a=Fp({})\n'.format(a))
+f.write('a=Fp({})\n'.format(a_TE))
 f.write('d_num=Fp({})\n'.format(d1))
 f.write('d_den=Fp({})\n'.format(d2))
-f.write('d=Fp({})\n'.format(d))
+f.write('d=Fp({})\n'.format(d_TE))
 f.write('# endomorphism coefficients\n')
 f.write('a1=Fp({})\n'.format(a1))
 f.write('a2=Fp({})\n'.format(a2))
@@ -154,4 +154,35 @@ f.write('r={}\n'.format(r))
 f.write('cofactor = 4\n')
 f.write('curve_order=r*cofactor\n')
 f.write('L={}\n'.format(L))
+
+# Generator
+# We choose a small x-coordinate in twisted Edwards coordinates.
+xG_TE = Fp(1)
+yG_TE = ((5*xG_TE**2+1)/(1-d_TE*xG_TE**2)).sqrt()
+assert a_TE*xG_TE**2 + yG_TE**2 == 1 + d_TE* xG_TE**2 * yG_TE**2
+f.write('xG_TE=Fp(0x{})\n'.format(ZZ(xG_TE).hex()))
+f.write('yG_TE=Fp(0x{})\n'.format(ZZ(yG_TE).hex()))
+f.write('zG_TE=Fp(0x1)\n')
+f.close()
+
+# Twisted edward with a != -1
+xG_TE_0 = xG_TE * (Fp(-5)/a_TE_0).sqrt()
+yG_TE_0 = yG_TE
+assert a_TE_0*xG_TE_0**2 + yG_TE_0**2 == 1 + d_TE_0* xG_TE_0**2 * yG_TE_0**2
+
+f = open('./' + os.path.dirname(__file__) +'/params-M.py', 'a')
+xG_M = (1+yG_TE_0)/(1-yG_TE_0)
+yG_M = (1+yG_TE_0)/(1-yG_TE_0)/xG_TE_0
+assert B*yG_M**2 == xG_M**3 + A*xG_M**2 +xG_M
+f.write('xG_M=Fp(0x{})\n'.format(ZZ(xG_M).hex()))
+f.write('yG_M=Fp(0x{})\n'.format(ZZ(yG_M).hex()))
+f.write('zG_M=Fp(0x1)\n')
+f.close()
+
+f = open('./' + os.path.dirname(__file__) +'/params-W.py', 'a')
+xG_W = xG_M/B+A/(3*B)
+yG_W = yG_M/B
+assert yG_W**2 == xG_W**3 + a*xG_W + b
+f.write('xG_W=Fp(0x{})\n'.format(ZZ(xG_W).hex()))
+f.write('yG_W=Fp(0x{})\n'.format(ZZ(yG_W).hex()))
 f.close()
