@@ -12,6 +12,7 @@
 
 %% \newcommand{\AS}[1]{\color{red}#1\color{black}}
 \newcommand{\SM}[1]{\color{blue}#1\color{black}}
+\newcommand{\ZZ}[1]{\color{cyan}#1\color{black}}
 
 \newcommand{\Q}{\ensuremath{\mathbb Q}}
 \newcommand{\Z}{\ensuremath{\mathbb Z}}
@@ -24,7 +25,7 @@
 
 
 \title{Bandersnatch: a fast elliptic curve built over the BLS12-381 scalar field.}
-\author{Simon Masson and Antonio Sanso}
+\author{Simon Masson and Antonio Sanso and Zhenfei Zhang}
 %\address{Heliax}
 %\author{Antonio Sanso}
 %\address{Ethereum Foundation and Ruhr Universit{\"a}t Bochum}
@@ -38,6 +39,9 @@
  built over the BLS12-381~\cite{bls12381} scalar field. The curve is
  similar to Jubjub~\cite{jubjub} but is equipped with an efficient
  endomorphism, allowing a fast scalar multiplication algorithm.
+ Our banchmark shows that the multiplication is 42\% faster, 
+ and the size of R1CS constraints is XX \% smaller, 
+ compared to those of the Jubjub Curve.
 \end{abstract}
 
 \SM{Add refs: CM method, Silverman hasse bound, number theory orders
@@ -71,7 +75,8 @@ algorithm, compared for example with the ``Bitcoin curve''
 It comes from the fact that the curve does not have an efficiently
 computable endomorphism, necessary for computing scalar
 multiplications using the GLV method~\cite{C:GalLamVan01} (a technique
-protected by a US patent until few months ago, but that expired and is
+protected by a US patent until Sep 2020 \cite{glvpatent}, but that 
+expired and is
 freely usable now).
 
 \paragraph{Our contribution.}
@@ -82,6 +87,28 @@ defined over the BLS12-381 scalar field. This way, we obtain an
 elliptic using the Complex Multiplication method, where the scalar
 multiplication algorithm is efficient thanks to the GLV
 method~\cite{C:GalLamVan01}.
+
+Table \ref{tab:comp} shows a comparison of Bandersnatch curve
+and Jubjub curve, in terms of both group multiplications and 
+the number of constraints one needs to express a group multiplication
+in the form of rank one constraint system (R1CS), 
+a common approach for expressing circuits for zero-knowledge 
+proof systems. Details deferred to Section \ref{sec:comparison}.
+
+\begin{table}[h] %\small
+  \centering
+  
+  \begin{tabular}{|l|c|c|}\hline
+      & multiplication cost & \# constraints \\\hline\hline
+    Jubjub & 75 us & \\\hline
+    Bandersnatch & 44 us &  \\\hline\hline   
+    Improvement & 42\% & \\\hline
+  \end{tabular}
+  \caption{Bandersnatch vs Jubjub}
+  \label{tab:comp}
+\end{table}
+
+
 
 \paragraph{Organization of the paper.}
 In Section~\ref{sec:small-disc-curves}, we describe how we obtained
@@ -332,6 +359,9 @@ check.
 We estimate that the Bandersnatch curve (resp. its quadratic twist)
 has $126$ bits of security (resp. $122$ bits of security).
 
+\ZZ{TODOs: 1. expand the security section 2. hash to curve (not essential, but nice to have)
+3. serialization (required by a spec rather than an academic paper. may be borrow 
+some ed25519 trick where the cofactor is 8?)}
 
 \section{Comparison}\label{sec:comparison}
 
@@ -361,13 +391,77 @@ decompose $n = n_1 + \lambda n_2$. Then a multi scalar multiplication
 is computed in $\log n/2$ doublings and $3\log n/8$ additions (in average) on the curve.
 
 \paragraph{Benchmarks.}
-The \href{https://github.com/zhenfeizhang/bandersnatch-glv}{Rust implementation} of the Bandersnatch scalar multiplication
-algorithm confirms our estimations: the GLV method is $40\%$ faster
-than the Jubjub implementation.
+We implement Bandersnatch in Rust, using the Arkworks framework \cite{arkworks}, 
+and release our code to the open domain \cite{arkworks,bandersnatch-rust}. 
+
+We benchmarked our implementation with both GLV enabled and disabled, and 
+compared it with Arkworks' own Jubjub implementation. 
+Our benchmark is conducted over an AMD 5900x CPU, with Ubuntu 20.04,
+rust 1.52 stable version, and Arkwork 0.3.0 release version.
+We used \texttt{criterion} mirco-benchmark toolchain,  version 0.3.0 \cite{criterion},
+for data collection. We compile Arkworks with two options, namely
+\texttt{default} and \texttt{asm}, respectively.
+The \texttt{default} setup relies on \texttt{num\_bigint} crate for 
+large integer arithmetics, while \texttt{asm}
+turns on assembly for finite field multiplication.
+
+
+In a bit more details, Arkworks use the so-called
+\texttt{double-then-add}
+multiplication methodology, without side channel protections such 
+as Montgomery ladders. Our non-GLV implementation also follows
+this design. For our GLV implementation, there are three components,
+namely, the endomorphism, the scalar decomposition, and the
+multi-scalar-multiplication (MSM). We implement those schemes and 
+present the micro-benchmarks in Table \ref{tab:comp_full}.
+Specifically, we do not use the MSM implementation in Arkworks:
+our scalars, after the decomposition, contain roughly 128 bits
+of leading \texttt{0}s, and our own MSM implementation is 
+optimized for this setting.
+
+To have a meaningful comparison, we benchmark
+the cost of group multiplication over the fixed, default generator.
+Note that Arkworks do not implement optimizations for 
+fixed generators nonetheless. We then sample field elements 
+uniformly at random, for each new iteration, and the benchmark
+result is consolidated over 100 iterations.
+
+Table \ref{tab:comp_full} presents the full picture of the benchmark.
+When GLV is disabled, we observe a similar but a little worse 
+performance for Bandersnatch curve, compared to
+the 
+Jubjub curve, due to the slightly larger coefficient 
+$a$ ($-5$ v.s. $-1$), 
+and slightly larger scalar field (255 vs 254 bits (\ZZ{is this correct?})).
+When GLV is enabled, we report a 45\% improvement of Bandersnatch curve
+itself, and a 42\% improvement over the Jubjub curve.
+
+\begin{table}[h] %\small
+  \centering
+  
+  \begin{tabular}{|l|c|c|}\hline
+      & \texttt{default} & \texttt{asm} \ZZ{todo}\\\hline\hline
+    Jubjub & 75 us & \\\hline
+    Bandersnatch without GLV & 78 us &  \\\hline\hline   
+    Endomorphism & 2.4 us& \\\hline
+    Scalar decomposition & 0.75 us & \\\hline
+    multi-scalar-multiplication & \ZZ{todo} & \\\hline
+    Bandersnatch with GLV& 44 us &  \\\hline\hline
+    Overall Improvement & 42\% & \\\hline
+  \end{tabular}
+  \caption{Bandersnatch vs Jubjub, expanded}
+  \label{tab:comp_full}
+\end{table}
+
+\ZZ{todo: write about R1CS result}
+
+%The \href{https://github.com/zhenfeizhang/bandersnatch-glv}{Rust implementation} of the Bandersnatch scalar multiplication
+%algorithm confirms our estimations: the GLV method is $40\%$ faster
+%than the Jubjub implementation.
 
 \bigskip
 \paragraph*{\textbf{Acknowledgments.}} We would like to thank Luca De
-Feo, Justin Drake, Dankrad Feist, Daira Hopwood and Zhenfei Zhang for
+Feo, Justin Drake, Dankrad Feist and Daira Hopwood for
 fruitful discussions.
 
 \bibliography{bandersnatch,cryptobib/abbrev3,cryptobib/crypto}
