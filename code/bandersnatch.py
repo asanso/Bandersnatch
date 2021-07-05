@@ -70,7 +70,13 @@ class BandersnatchPoint(Point):
     def fast_scalar_mul(self, n):
         psiP = self.psi()
         beta = vector([n,0]) * self.curve.N_inv
+        print("N: ",self.curve.N)
+        print("N^-1: ",self.curve.N_inv)
         b = vector([int(beta[0]), int(beta[1])]) * self.curve.N
+        print("beta",beta)
+        print("beta",[int(beta[0]), int(beta[1])])
+        print("b", b)
         k1 = n-b[0]
         k2 = -b[1]
+        print ("decom:", n, k1, k2)
         return self.multi_scalar_mul(k1, psiP, k2)

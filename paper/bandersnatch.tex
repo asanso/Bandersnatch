@@ -24,7 +24,7 @@
 
 
 \title{Bandersnatch: a fast elliptic curve built over the BLS12-381 scalar field.}
-\author{Simon Masson and Antonio Sanso}
+\author{Simon Masson and Antonio Sanso and Zhenfei Zhang}
 %\address{Heliax}
 %\author{Antonio Sanso}
 %\address{Ethereum Foundation and Ruhr Universit{\"a}t Bochum}
@@ -38,6 +38,9 @@
  built over the BLS12-381~\cite{bls12381} scalar field. The curve is
  similar to Jubjub~\cite{jubjub} but is equipped with an efficient
  endomorphism, allowing a fast scalar multiplication algorithm.
+ Our banchmark shows that the multiplication is 47\% faster, 
+ and the size of R1CS constraints is XX \% smaller, 
+ compared to those of the Jubjub Curve.
 \end{abstract}
 
 \SM{Add refs: CM method, Silverman hasse bound, number theory orders
@@ -71,7 +74,8 @@ algorithm, compared for example with the ``Bitcoin curve''
 It comes from the fact that the curve does not have an efficiently
 computable endomorphism, necessary for computing scalar
 multiplications using the GLV method~\cite{C:GalLamVan01} (a technique
-protected by a US patent until few months ago, but that expired and is
+protected by a US patent until Sep 2020 \cite{glvpatent}, but that 
+expired and is
 freely usable now).
 
 \paragraph{Our contribution.}
@@ -82,6 +86,28 @@ defined over the BLS12-381 scalar field. This way, we obtain an
 elliptic using the Complex Multiplication method, where the scalar
 multiplication algorithm is efficient thanks to the GLV
 method~\cite{C:GalLamVan01}.
+
+Table \ref{tab:comp} shows a comparison of Bandersnatch curve
+and Jubjub curve, in terms of both group multiplications and 
+the number of constraints one needs to express a group multiplication
+in the form of rand one constraint system (R1CS), 
+a common approach for writing circuits for zero-knowledge 
+proof systems. Details deferred to Section \ref{sec:comparison}.
+
+\begin{table}[h] %\small
+  \centering
+  
+  \begin{tabular}{|l|c|c|}\hline
+      & multiplication cost & \# constraints \\\hline\hline
+    Jubjub & 75 us & \\\hline
+    Bandersnatch & 40 us &  \\\hline\hline   
+    Improvement & 47\% & \\\hline
+  \end{tabular}
+  \caption{Bandersnatch vs Jubjub}
+  \label{tab:comp}
+\end{table}
+
+
 
 \paragraph{Organization of the paper.}
 In Section~\ref{sec:small-disc-curves}, we describe how we obtained
