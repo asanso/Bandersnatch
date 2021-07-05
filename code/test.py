@@ -72,8 +72,6 @@ Q = C.random_point()
 # P.print()
 G = C.generator()
 G.print(affine=True,hex_flag=True)
-F = G.psi()
-F.print(affine=True)
 
 # psi
 R = P.psi()
@@ -85,12 +83,12 @@ P_r = C.point_of_order_r()
 assert P_r.psi() == P_r.scalar_mul(C.L)
 
 # GLV
-# n = random.randint(0,r)
-n = 4257185345094557079734489188109952172285839137338142340240392707284963971010
-# R1 = P_r.scalar_mul(n)
-# R2 = P_r.fast_scalar_mul(n)
-# assert R1 == R2
+n = random.randint(0,r)
+# n = 4257185345094557079734489188109952172285839137338142340240392707284963971010
+R1 = P_r.scalar_mul(n)
+R2 = P_r.fast_scalar_mul(n)
+assert R1 == R2
 
-G = C.generator()
-G1 = G.fast_scalar_mul(n)
-G1.print(affine=True)
+# G = C.generator()
+# G1 = G.fast_scalar_mul(n)
+# G1.print(affine=True)
