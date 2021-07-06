@@ -261,12 +261,10 @@ $-292$ & $92$-bit & $2  \cdot 54983  \cdot 5220799  \cdot 2671917733  \cdot p_{1
 The Bandersnatch is obtained from a discriminant $-D = -8$, meaning
 that the endomorphism ring is $\Z[\sqrt{-2}]$.
 We obtain the curve $j$-invariant using the Complex Multiplication
-method, based on the Hilbert class polynomial $H_{-D}(X)$, where
-$\text{Ell}_{-D}$ denotes the set of elliptic curves of endomorphism
-ring of discriminant $-D$.
-Using SageMath, one obtains that the Bandersnatch $j$-invariant is
-$8000$ using \texttt{hilbert\_class\_polynomial(-8).roots()}.
-From the $j$-invariant, we can obtain the curve equation in different
+method, based on the Hilbert class polynomial $H_{-D}(X)$.
+The roots of $H_{-D}$ are $j$-invariants of elliptic curves whose
+endomorphism ring is of discriminant $-D$.
+From a $j$-invariant, we obtain the curve equation in different
 models. Before looking into details three different representations,
 we briefly recall how to exhibit the degree $2$ endomorphism $\psi$.
 
