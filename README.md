@@ -79,10 +79,13 @@ and our code can be tested using
 ```shell
 $ make test
 ```
+We also provide Rust benchmarks, where we obtained a 42%
+improvement. TODO coming soon.
 
 ## Technical details
 We are writing a paper for more technical details. It is still a work
 in progress, available using
 ```shell
 make pdf
+evince paper/bandersnatch.pdf
 ```
