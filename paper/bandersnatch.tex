@@ -288,7 +288,7 @@ In the following sections, we provide details on the curve equation,
 the $\psi$ rational maps, and a generator of the $p_{253}$-order
 subgroup in the case of the affine Weierstrass, projective Montgomery
 and projective twisted Edwards representations.
-The parameters can be obtained using the script
+The parameters are reproducible using the script
 of~\href{https://github.com/asanso/Bandersnatch/blob/main/code/get\_params.py}{this
   file}.
 
@@ -311,10 +311,13 @@ $$E_W:y^2 = x^3 -3763200000x -78675968000000.$$
 
 \paragraph{Endomorphism.}
 The endomorphism $\psi$ can obtained using the method detailed above.
-Using the coefficients $u, r_0, r_1, s_0, t_0, t_1$ of the file
-\texttt{params-W.py} in our repository, we obtain that
-$$\psi_\text{W}(x,y) = \left(u^2\cdot \frac{x^2+r_1x+r_0}{x+s_0}, u^3\cdot
-y\cdot \frac{x^2+t_1x+t_0}{(x+s_0)^2}\right).$$
+We obtain the following expression:
+$$\psi_\text{W}(x,y) = \left(u^2\cdot \frac{x^2+44800x+2257920000}{x+44800}, u^3\cdot
+y\cdot \frac{x^2+2\cdot 44800x+t_0}{(x+44800)^2}\right).$$
+\begin{verbatim}
+u=0x23c58c92306dbb96236140669daf1e2420ffd8fc8de2036c69307ddaa306c7d4
+t0=0x73eda753299d7d483339d80809a1d80553bda402fffe5bfefffffffef10be001.
+\end{verbatim}
 
 \paragraph{Subgroup generator.}
 A generator of the $p_{253}$-order subgroup is given by $E_W(x_W,y_W)$
@@ -343,10 +346,19 @@ Section~\ref{sec:comparison} for details.
 
 \paragraph{Endomorphism.}
 From this representation, we exhibit the degree $2$ endomorphism in
-twisted Edwards coordinates, where $a_i, b_i, c_i \in \Fp$ are
-coefficients available in the file \texttt{params-TE.py} in our repository:
+twisted Edwards coordinates:
 $$\psi_\text{TE}(x,y,z) = (xa_1(y+a_2z)(y+a_3z), b_1(y+b_2z)(y+b_3z)yz^2,
-(y+c_1z)(y+c_2z)yz^2).$$
+(y+c_1z)(y+c_2z)yz^2)$$
+\begin{verbatim}
+a1=0x23c58c92306dbb95960f739827ac195334fcd8fa17df036c692f7ddaa306c7d4
+a2=0x52c9f28b828426a561f00d3a63511a882ea712770d9af4d6ee0f014d172510b4
+a3=0x2123b4c7a71956a2d149cacda650bd7d2516918bf263672811f0feb1e8daef4d
+b1=0x52c9f28b828426a561f00d3a63511a882ea712770d9af4d6ee0f014d172510b4
+b2=0x50d06958b6e8ce1ab1b2745bd377e5bde07e867f02611eae1c098cd1519b574a
+b3=0x231d3dfa72b4af2d818763ac3629f247733f1d83fd9d3d50e3f6732dae64a8b7
+c1=0x5ede5fd005b839be71b70d491ebfddeff693de40b4c002a7fc1ae7171cc9f7b5
+c2=0x150f478323e54389c182cabeeae1fa155d29c5c24b3e595703e518e7e336084c.
+\end{verbatim}
 This map can be computed in 17 multiplications and 6 additions modulo $p$.
 
 \paragraph{Subgroup generator.}
@@ -374,9 +386,11 @@ A=0x4247698f4e32ad45a293959b4ca17afa4a2d2317e4c6ce5023e1fd63d1b5de98.
 \paragraph{Endomorphism.}
 Montgomery curves allow efficient scalar multiplication using the
 Montgomery ladder. We provide here the endomorphism $\psi$ in this
-model (where $c$ can be found in the file \texttt{params-M.py} in our
-repository):
+model:
 $$\psi_\text{M}(x,-,z) = (-(x-z)^2 - cxz, -, 2xz)$$
+\begin{verbatim}
+c=0x4247698f4e32ad45a293959b4ca17afa4a2d2317e4c6ce5023e1fd63d1b5de9a.
+\end{verbatim}
 
 \paragraph{Subgroup generator.}
 The generator of the $p_{253}$-order subgroup given above is of the
