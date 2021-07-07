@@ -76,7 +76,7 @@ algorithm, compared for example with the ``Bitcoin curve''
 It comes from the fact that the curve does not have an efficiently
 computable endomorphism, necessary for computing scalar
 multiplications using the GLV method~\cite{C:GalLamVan01} (a technique
-protected by a US patent until Sep 2020 \cite{glvpatent}, but that 
+protected by a US patent until Sep 2020~\cite{glvpatent}, but that 
 expired and is
 freely usable now).
 
@@ -442,14 +442,14 @@ decompose $n = n_1 + \lambda n_2$. Then a multi scalar multiplication
 is computed in $\log n/2$ doublings and $3\log n/8$ additions (in average) on the curve.
 
 \paragraph{Benchmarks.}
-We implement Bandersnatch in Rust, using the Arkworks framework \cite{arkworks}, 
-and release our code to the open domain \cite{arkworks,bandersnatch-rust}. 
+We implement Bandersnatch in Rust, using the Arkworks framework~\cite{arkworks}, 
+and release our code to the open domain~\cite{arkworks,bandersnatch-rust}. 
 
 We benchmarked our implementation with both GLV enabled and disabled, and 
 compared it with Arkworks' own Jubjub implementation. 
 Our benchmark is conducted over an AMD 5900x CPU, with Ubuntu 20.04,
 rust 1.52 stable version, and Arkwork 0.3.0 release version.
-We used \texttt{criterion} mirco-benchmark toolchain,  version 0.3.0 \cite{criterion},
+We used \texttt{criterion} mirco-benchmark toolchain,  version 0.3.0~\cite{criterion},
 for data collection. We compile Arkworks with two options, namely
 \texttt{default} and \texttt{asm}, respectively.
 The \texttt{default} setup relies on \texttt{num\_bigint} crate for 
