@@ -100,8 +100,8 @@ proof systems. Details deferred to Section \ref{sec:comparison}.
   \centering
   
   \begin{tabular}{|l|c|c|}\hline
-      & multiplication cost & \# constraints \\\hline\hline
-    Jubjub & 75 us & \\\hline
+      & multiplication cost & \# R1CS constraints \\\hline\hline
+    Jubjub & 75 us & 3325 \\\hline
     Bandersnatch & 44 us &  \\\hline\hline   
     Improvement & 42\% & \\\hline
   \end{tabular}
@@ -410,18 +410,18 @@ check.
 We estimate that the Bandersnatch curve (resp. its quadratic twist)
 has $126$ bits of security (resp. $122$ bits of security).
 
-\ZZ{TODOs: 1. expand the security section 2. hash to curve (not essential, but nice to have)
-3. serialization (required by a spec rather than an academic paper. may be borrow 
-some ed25519 trick where the cofactor is 8?)}
+% \ZZ{TODOs: 1. expand the security section 2. hash to curve (not essential, but nice to have)
+% 3. serialization (required by a spec rather than an academic paper. may be borrow 
+% some ed25519 trick where the cofactor is 8?)}
 
 \section{Comparison}\label{sec:comparison}
 
-\SM{TODO benchmarks:}
-\begin{itemize}
-\item both with and without the endomorphism,
-\item using windowing techniques,
-\item with a fixed-time (side-channel-resistant) algorithm.
-\end{itemize}
+% \SM{TODO benchmarks:}
+% \begin{itemize}
+% \item both with and without the endomorphism,
+% \item using windowing techniques,
+% \item with a fixed-time (side-channel-resistant) algorithm.
+% \end{itemize}
 
 %### Scalar multiplication improvement
 The twisted Edwards representation is very used in practice, and we
@@ -491,20 +491,39 @@ itself, and a 42\% improvement over the Jubjub curve.
   \centering
   
   \begin{tabular}{|l|c|c|}\hline
-      & \texttt{default} & \texttt{asm} \ZZ{todo}\\\hline\hline
-    Jubjub & 75 us & \\\hline
-    Bandersnatch without GLV & 78 us &  \\\hline\hline   
-    Endomorphism & 2.4 us& \\\hline
-    Scalar decomposition & 0.75 us & \\\hline
-    multi-scalar-multiplication & \ZZ{todo} & \\\hline
-    Bandersnatch with GLV& 44 us &  \\\hline\hline
-    Overall Improvement & 42\% & \\\hline
+      & \texttt{default} & \texttt{asm}\\\hline\hline
+    Jubjub & 75 us & 69 us \\\hline
+    Bandersnatch without GLV & 78 us & 72 us  \\\hline\hline   
+    Endomorphism & 2.4 us& 1.8 us\\\hline
+    Scalar decomposition & 0.75 us & 0.7 us \\\hline
+    multi-scalar-multiplication & 42 us &  40.8 us\\\hline
+    Bandersnatch with GLV& 44 us & 42 us \\\hline\hline
+    Overall Improvement & 42\% & 39\% \\\hline
   \end{tabular}
   \caption{Bandersnatch vs Jubjub, expanded}
   \label{tab:comp_full}
 \end{table}
 
-\ZZ{todo: write about R1CS result}
+%\ZZ{todo: write about R1CS result}
+
+Jubjub curve is known for its zk-Snark friendliness: its 
+base field matches the scalar field for BLS12-381 curve, a 
+pair-friendly curve, on top of which people build zk-Snark
+systems.
+In such a setting, the prover can sufficiently argue certain 
+relationship over some arithmetic circuit rather than binary
+circuit.
+The circuit is expressed in a form of Rank-1 constraint system
+(R1CS), and in general, the complexity is determined by the 
+number of constraints in an R1CS. 
+
+We therefore report the number of constraints to perform
+a group operation on both Jubjub curve and Bandersnatch 
+curve. We observe that it takes 3325 constraints for the 
+Jubjub curve. It also takes a same number of constraints
+for Bandersnatch if GLV algorithm is not enabled. 
+When GLV is enabled, this will be reduced to \ZZ{todo}.
+
 
 %The \href{https://github.com/zhenfeizhang/bandersnatch-glv}{Rust implementation} of the Bandersnatch scalar multiplication
 %algorithm confirms our estimations: the GLV method is $40\%$ faster
