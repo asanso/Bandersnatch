@@ -102,8 +102,8 @@ proof systems. Details deferred to Section \ref{sec:comparison}.
   \begin{tabular}{|l|c|c|}\hline
       & multiplication cost & \# R1CS constraints \\\hline\hline
     Jubjub & 75 us & 3325 \\\hline
-    Bandersnatch & 44 us &  \\\hline\hline   
-    Improvement & 42\% & \\\hline
+    Bandersnatch & 44 us & 1468 \\\hline\hline   
+    Improvement & 42\% & 56\%\\\hline
   \end{tabular}
   \caption{Bandersnatch vs Jubjub}
   \label{tab:comp}
@@ -500,7 +500,7 @@ itself, and a 42\% improvement over the Jubjub curve.
     Bandersnatch with GLV& 44 us & 42 us \\\hline\hline
     Overall Improvement & 42\% & 39\% \\\hline
   \end{tabular}
-  \caption{Bandersnatch vs Jubjub, expanded}
+  \caption{Bandersnatch vs Jubjub: Performance}
   \label{tab:comp_full}
 \end{table}
 
@@ -522,7 +522,26 @@ a group operation on both Jubjub curve and Bandersnatch
 curve. We observe that it takes 3325 constraints for the 
 Jubjub curve. It also takes a same number of constraints
 for Bandersnatch if GLV algorithm is not enabled. 
-When GLV is enabled, this will be reduced to \ZZ{todo}.
+When GLV is enabled, this will be reduced to 1468.
+Precisely, we list the breakdown numbers in Table \ref{tab:r1cs_full};
+
+\begin{table}[h] %\small
+  \centering
+  
+  \begin{tabular}{|l|c|}\hline
+      & \texttt{default} \\\hline\hline
+      jubjub& 3325 \\\hline
+      Bandersnatch without GLV& 3325 \\\hline\hline
+    Endomorphism & 10 \\\hline
+    Scalar decomposition & 254 \\\hline
+    multi-scalar-multiplication & 1204 \\\hline
+    Bandersnatch with GLV& 1468 \\\hline\hline
+    Overall Improvement & 56\%   \\\hline
+  \end{tabular}
+  \caption{Bandersnatch vs Jubjub: R1CS}
+  \label{tab:r1cs_full}
+\end{table}
+
 
 
 %The \href{https://github.com/zhenfeizhang/bandersnatch-glv}{Rust implementation} of the Bandersnatch scalar multiplication
