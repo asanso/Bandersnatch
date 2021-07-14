@@ -102,8 +102,8 @@ proof systems. Details deferred to Section \ref{sec:comparison}.
   \begin{tabular}{|l|c|c|}\hline
       & multiplication cost & \# R1CS constraints \\\hline\hline
     Jubjub & 75 us & 3325 \\\hline
-    Bandersnatch & 44 us & 1468 \\\hline\hline   
-    Improvement & 42\% & 56\%\\\hline
+    Bandersnatch & 44 us & 2361 \\\hline\hline   
+    Improvement & 42\% & 39\%\\\hline
   \end{tabular}
   \caption{Bandersnatch vs Jubjub}
   \label{tab:comp}
@@ -505,7 +505,7 @@ itself, and a 42\% improvement over the Jubjub curve.
 \end{table}
 
 %\ZZ{todo: write about R1CS result}
-
+\paragraph{R1CS constraints.}
 Jubjub curve is known for its zk-Snark friendliness: its 
 base field matches the scalar field for BLS12-381 curve, a 
 pair-friendly curve, on top of which people build zk-Snark
@@ -520,27 +520,56 @@ number of constraints in an R1CS.
 We therefore report the number of constraints to perform
 a group operation on both Jubjub curve and Bandersnatch 
 curve. We observe that it takes 3325 constraints for the 
-Jubjub curve. It also takes a same number of constraints
-for Bandersnatch if GLV algorithm is not enabled. 
-When GLV is enabled, this will be reduced to 1468.
-Precisely, we list the breakdown numbers in Table \ref{tab:r1cs_full};
-
-\begin{table}[h] %\small
-  \centering
+Jubjub curve, for which the statement is argued over 
+the Edwards Affine form coordinates. 
+It also takes a same number of constraints
+for Bandersnatch when its coordinates are in this form. 
+However, the Bandersnatch curve also supports a 
+short Weierstrass form, for which we can argue the 
+relationship over the projective coordinates.
+This effectively reduces the number of constraints to
+2361, or a 39\% improvement, as shown in Table \ref{tab:comp}.
   
-  \begin{tabular}{|l|c|}\hline
-      & \texttt{default} \\\hline\hline
-      jubjub& 3325 \\\hline
-      Bandersnatch without GLV& 3325 \\\hline\hline
-    Endomorphism & 10 \\\hline
-    Scalar decomposition & 254 \\\hline
-    multi-scalar-multiplication & 1204 \\\hline
-    Bandersnatch with GLV& 1468 \\\hline\hline
-    Overall Improvement & 56\%   \\\hline
-  \end{tabular}
-  \caption{Bandersnatch vs Jubjub: R1CS}
-  \label{tab:r1cs_full}
-\end{table}
+We also want to remark the obstacle of expressing the 
+GLV algorithm in terms of R1CS circuit. We observe a cost of 10 
+constraints for computing the endomorphism, and a cost of 2144 
+constraints for multiple scalar multiplications where the 
+scalars are decomposed already. The cost of those two subroutines
+ is already close
+to the cost of a non-GLV circuit over the projective 
+coordinates. In addition to that, the biggest cost that 
+GLV incurs is to argue the correctness of the scalar 
+decomposition, i.e., for a scalar $s$, we need to argue 
+that $s = k_1 + k_2 \beta$ over the scalar field of the
+Bandersnatch curve, 
+for some fixed $\beta$. To date, we do not have an 
+efficient way for such a proof. The best methods known to us are
+either to argue this relationship bit by bit which incurs a
+prohibitive cost, or to 
+embed the scalars into group elements and argue the relationship
+over the group elements, whose cost will far exceed a 
+sing group operation.
+
+
+% When GLV is enabled, this will be reduced to 1468.
+% Precisely, we list the breakdown numbers in Table \ref{tab:r1cs_full};
+
+% \begin{table}[h] %\small
+%   \centering
+  
+%   \begin{tabular}{|l|c|}\hline
+%       & \texttt{default} \\\hline\hline
+%       jubjub& 3325 \\\hline
+%       Bandersnatch without GLV& 3325 \\\hline\hline
+%     Endomorphism & 10 \\\hline
+%     Scalar decomposition &  \\\hline
+%     multi-scalar-multiplication & 2144 \\\hline
+%     Bandersnatch with GLV&  \\\hline\hline
+%     Overall Improvement & \%   \\\hline
+%   \end{tabular}
+%   \caption{Bandersnatch vs Jubjub: R1CS}
+%   \label{tab:r1cs_full}
+% \end{table}
 
 
 
@@ -549,7 +578,7 @@ Precisely, we list the breakdown numbers in Table \ref{tab:r1cs_full};
 %than the Jubjub implementation.
 
 \bigskip
-\paragraph*{\textbf{Acknowledgments.}} We would like to thank Luca De
+\paragraph*{\textbf{Acknowledgments.}} We would like to thank Weikeng Chen, Luca De
 Feo, Justin Drake, Dankrad Feist and Daira Hopwood for
 fruitful discussions.
 
