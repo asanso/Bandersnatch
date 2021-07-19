@@ -13,6 +13,7 @@
 %% \newcommand{\AS}[1]{\color{red}#1\color{black}}
 \newcommand{\SM}[1]{\color{blue}#1\color{black}}
 \newcommand{\ZZ}[1]{\color{cyan}#1\color{black}}
+\newcommand{\AS}[1]{\color{red}#1\color{black}}
 
 \newcommand{\Q}{\ensuremath{\mathbb Q}}
 \newcommand{\Z}{\ensuremath{\mathbb Z}}
@@ -324,6 +325,9 @@ where:
   xW=0x72d12dcb2520ddddb7d26e93ac255607af27811e6b44745088b40f5c9877bfe6
   yW=0x3379226315f3a722de23fc393216ca709b7f5ca335173f5c44e39f9c7e73f029.
 \end{verbatim}
+
+\AS{we might actually need to "justify" the choose of the generation. E.g. for BLS-12381: \textit{The generators of G1 and G2 are computed by finding the 
+lexicographically smallest valid x-coordinate, and its lexicographically smallesty-coordinate and scaling it by the cofactor such that the result is not the point at infinity.}}
 
 \subsection{Twisted Edwards curve}
 \paragraph{Curve equation.}
