@@ -539,21 +539,21 @@ We also want to remark the obstacle of expressing the
 GLV algorithm in terms of R1CS circuit. We observe a cost of 10 
 constraints for computing the endomorphism, and a cost of 2144 
 constraints for multiple scalar multiplications where the 
-scalars are decomposed already. The cost of those two subroutines
+scalars are already decomposed. The cost of those two subroutines
  is already close
 to the cost of a non-GLV circuit over the projective 
 coordinates. In addition to that, the biggest cost that 
 GLV incurs is to argue the correctness of the scalar 
 decomposition, i.e., for a scalar $s$, we need to argue 
-that $s = k_1 + k_2 \beta$ over the scalar field of the
+that $s = k_1 + k_2 \lambda$ over the scalar field of the
 Bandersnatch curve, 
-for some fixed $\beta$. To date, we do not have an 
+for some fixed $\lambda$. To date, we do not have an 
 efficient way for such a proof. The best methods known to us are
 either to argue this relationship bit by bit which incurs a
 prohibitive cost, or to 
 embed the scalars into group elements and argue the relationship
 over the group elements, whose cost will far exceed a 
-sing group operation.
+single group operation.
 
 
 % When GLV is enabled, this will be reduced to 1468.
