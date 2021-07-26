@@ -484,10 +484,9 @@ result is consolidated over 100 iterations.
 Table \ref{tab:comp_full} presents the full picture of the benchmark.
 When GLV is disabled, we observe a similar but a little worse 
 performance for Bandersnatch curve, compared to
-the 
-Jubjub curve, due to the slightly larger coefficient 
-$a$ ($-5$ vs $-1$), 
-and slightly larger scalar field (253 vs 252 bits).
+the Jubjub curve, due to the slightly larger coefficient 
+$a=-5$ and a larger scalar field of 253 bits (Jubjub curve has $a=-1$
+and a scalar field of 252 bits).
 When GLV is enabled, we report a 45\% improvement of Bandersnatch curve
 itself, and a 42\% improvement over the Jubjub curve.
 
@@ -496,12 +495,12 @@ itself, and a 42\% improvement over the Jubjub curve.
   
   \begin{tabular}{|l|c|c|}\hline
       & \texttt{default} & \texttt{asm}\\\hline\hline
-    Jubjub & 75 us & 69 us \\\hline
+    Jubjub & 75 us & 69 us \\\hline\hline
     Bandersnatch without GLV & 78 us & 72 us  \\\hline\hline   
-    Endomorphism & 2.4 us& 1.8 us\\\hline
-    Scalar decomposition & 0.75 us & 0.7 us \\\hline
-    multi-scalar-multiplication & 42 us &  40.8 us\\\hline
-    Bandersnatch with GLV& 44 us & 42 us \\\hline\hline
+    Bandersnatch with GLV& 44 us & 42 us \\\hline
+    \ \ \ Endomorphism & 2.4 us& 1.8 us\\\hline
+    \ \ \ Scalar decomposition & 0.75 us & 0.7 us \\\hline
+    \ \ \ multi-scalar-multiplication & 42 us &  40.8 us\\\hline\hline
     Overall Improvement & 42\% & 39\% \\\hline
   \end{tabular}
   \caption{Bandersnatch vs Jubjub: Performance}
