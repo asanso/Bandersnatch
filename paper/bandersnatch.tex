@@ -67,7 +67,7 @@ This curve is not pairing-friendly, but leads to constructions where
 $\mathbb F_{r_\text{BLS}}$ arithmetic circuits can be manipulated
 using the BLS12-381 curve.
 The Jubjub curve can be represented in the twisted Edwards
-coordinates, allowing efficiency inside ZK-SNARK circuits.
+coordinates, allowing efficiency inside zk-SNARK circuits.
 In order for some cryptographic application to scale, it is needed to
 have efficient scalar multiplication on the non-pairing-friendly
 curve.
@@ -509,9 +509,9 @@ itself, and a 42\% improvement over the Jubjub curve.
 
 %\ZZ{todo: write about R1CS result}
 \paragraph{R1CS constraints.}
-Jubjub curve is known for its zk-Snark friendliness: its 
+Jubjub curve is known for its zk-SNARK friendliness: its 
 base field matches the scalar field for BLS12-381 curve, a 
-pairing-friendly curve, on top of which people build zk-Snark
+pairing-friendly curve, on top of which people build zk-SNARK
 systems.
 In such a setting, the prover can sufficiently argue certain 
 relationship over some arithmetic circuit rather than binary
