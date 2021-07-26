@@ -4,6 +4,22 @@ from sage.matrix.constructor import Matrix
 from sage.rings.finite_rings.finite_field_constructor import FiniteField
 from sage.modules.free_module_element import free_module_element as vector
 
+
+def base64FieldInt(a, hex_flag=False):
+    a = ZZ(a)
+    a1 = a % (2**64)
+    a = a >> 64
+    a2 = a % (2**64)
+    a = a >> 64
+    a3 = a % (2**64)
+    a = a >> 64
+    a4 = a % (2**64)
+    if hex:
+        return '[' + str(hex(a1)) + ',' + str(hex(a2)) + ',' + str(hex(a3)) \
+            + ',' + str(hex(a4)) + ']'
+    else:
+        return '[' + str(a1) + ',' + str(a2) + ',' + str(a3) + ',' + str(a4) + ']'
+    
 class Curve():
     
     def __init__(self, p, a, d, r, cofactor):
@@ -13,6 +29,16 @@ class Curve():
         self.d = self.Fp(d)
         self.cofactor = cofactor
         self.r = r
+
+    def __str__(self):
+        a = ZZ(self.a)
+        d = ZZ(self.d)
+        p = ZZ(self.p)
+        if len(str(a-p)) < 5 :
+            a = a-p
+        if len(str(d-p)) < 5 :
+            d = d-p
+        return "Elliptic curve with equation {} * x² + y² = 1 + {} * x² * y² defined over GF({})".format(a,d,p)
 
     def random_point(self):
         x = self.Fp.random_element()
@@ -40,6 +66,11 @@ class Point():
         self.y = y
         self.z = z
         self.curve = curve
+
+    def __str__(self):
+        return 'x:' + base64FieldInt(self.x, True) + '\n' + \
+            'y:' + base64FieldInt(self.y, True) + '\n' + \
+            'z:' + base64FieldInt(self.z, True)
         
     def __eq__(self, other):
         return self.x * other.z == \
@@ -58,7 +89,7 @@ class Point():
         return self.x.is_zero() and self.y == self.z
     
     def normalize(self):
-        return Point(self.x/self.z, self.y/self.z, 1, curve)
+        return Point(self.x/self.z, self.y/self.z, 1, self.curve)
 
     def add(self, other):
         x,y,z = self.x, self.y, self.z
@@ -129,37 +160,3 @@ class Point():
 
     def clear_cofactor(self):
         return self.scalar_mul(self.curve.cofactor)
-
-    def print(self, hex_flag=False, affine=False):
-        if affine:
-            x = self.x/self.z
-            y = self.y/self.z
-            z = 1
-        else:
-            x = self.x
-            y = self.y
-            z = self.z
-
-        print("x:", x)
-        print_fq(x, hex_flag)
-        print("y:", y)
-        print_fq(y, hex_flag)
-        print("z:", z)
-        print_fq(z, hex_flag)
-            
-
-
-
-def print_fq(a, hex_flag=False):
-    a = ZZ(a)
-    a1 = a % (2**64)
-    a = a >> 64
-    a2 = a % (2**64)
-    a = a >> 64
-    a3 = a % (2**64)
-    a = a >> 64
-    a4 = a % (2**64)
-    if hex:
-        print(hex(a1), hex(a2), hex(a3), hex(a4))
-    else:
-        print(a1, a2, a3, a4)
