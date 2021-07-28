@@ -23,10 +23,10 @@ clean_params:
 pdf:
 	git submodule init
 	git submodule update
-	pdflatex -output-directory paper bandersnatch.tex
-	cd paper && bibtex bandersnatch.aux && cd ..
-	pdflatex -output-directory paper bandersnatch.tex
-	pdflatex -output-directory paper bandersnatch.tex
+	cd paper && pdflatex bandersnatch.tex
+	cd paper && pbibtex bandersnatch.aux
+	cd paper && pdflatex bandersnatch.tex
+	cd paper && pdflatex bandersnatch.tex
 
 clean_paper: 
 	rm -vf paper/bandersnatch.aux
