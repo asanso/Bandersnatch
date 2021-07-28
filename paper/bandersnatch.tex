@@ -47,7 +47,6 @@
  similar to Jubjub~\cite{jubjub} but is equipped with an efficient
  endomorphism, allowing a fast scalar multiplication algorithm.
  Our benchmark shows that the multiplication is 42\% faster, 
- and the size of R1CS constraints is XX \% smaller, 
  compared to those of the Jubjub Curve.
 \end{abstract}
 
@@ -90,6 +89,8 @@ elliptic using the Complex Multiplication method, where the scalar
 multiplication algorithm is efficient thanks to the GLV
 method~\cite{C:GalLamVan01}.
 
+We implement this curve in Rust, using the Arkworks framework~\cite{arkworks}, 
+and release our code to the open domain~\cite{arkworks,bandersnatch-rust}. 
 Table \ref{tab:comp} shows a comparison of Bandersnatch curve
 and Jubjub curve. 
 Details deferred to Section \ref{sec:comparison}.
@@ -117,11 +118,13 @@ proof systems.
 A group multiplication takes 
 3325
 constraints when the point is in Affine form over the 
-twisted Edwards curve, and 
-2361
-constraints when the point is in the projective form
-over the short Weierstrass from.
-Both figures match what we have for Jubjub curve.
+twisted Edwards curve.
+%, and 
+%2361
+%constraints when the point is in the projective form
+%over the short Weierstrass from.
+%Both figures 
+This matches what we have for Jubjub curve.
 
 \paragraph{Organization of the paper.}
 In Section~\ref{sec:small-disc-curves}, we describe how we obtained
@@ -439,7 +442,7 @@ has $126$ bits of security (resp. $122$ bits of security).
 % \end{itemize}
 
 %### Scalar multiplication improvement
-The twisted Edwards representation is very used in practice, and we
+The twisted Edwards representation is mostly used in practice, and we
 now focus on the comparison between Jubjub and Bandersnatch in this
 model.
 
@@ -457,9 +460,6 @@ decompose $n = n_1 + \lambda n_2$. Then a multi scalar multiplication
 is computed in $\log n/2$ doublings and $3\log n/8$ additions (in average) on the curve.
 
 \paragraph{Benchmarks.}
-We implement Bandersnatch in Rust, using the Arkworks framework~\cite{arkworks}, 
-and release our code to the open domain~\cite{arkworks,bandersnatch-rust}. 
-
 We benchmarked our implementation with both GLV enabled and disabled, and 
 compared it with Arkworks' own Jubjub implementation. 
 Our benchmark is conducted over an AMD 5900x CPU, with Ubuntu 20.04,
@@ -472,8 +472,8 @@ large integer arithmetics, while \texttt{asm}
 turns on assembly for finite field multiplication.
 
 
-In a bit more details, Arkworks use the so-called
-\texttt{double-then-add}
+In a bit more details, Arkworks use the aforementioned
+double-and-add
 multiplication methodology, without side channel protections such 
 as Montgomery ladders. Our non-GLV implementation also follows
 this design. For our GLV implementation, there are three components,
@@ -553,12 +553,12 @@ point is platform depended.
   \end{figure}
 
 
-%\ZZ{todo: write about R1CS result}
+% %\ZZ{todo: write about R1CS result}
 \paragraph{R1CS constraints.}
-Jubjub curve is known for its zk-SNARK friendliness: its 
+Bandersnatch curve is zk-SNARK friendly: its 
 base field matches the scalar field for BLS12-381 curve, a 
 pairing-friendly curve, on top of which people build zk-SNARK
-systems.
+systems, such as Groth16 \cite{EC:Groth16} or Plonk \cite{EPRINT:GabWilCio19}.
 In such a setting, the prover can sufficiently argue certain 
 relationship over some arithmetic circuit rather than binary
 circuit.
@@ -566,31 +566,35 @@ The circuit is expressed in a form of Rank-1 constraint system
 (R1CS), and in general, the complexity is determined by the 
 number of constraints in an R1CS. 
 
-We want to evaluate the number of constraints for a 
-variable base group multiplication. For a double-then-add
-algorithm, it takes 6 constraints per addition, 5 constraints
+We evaluate the number of constraints for a 
+variable base group multiplication. For a double-and-add
+algorithm, 
+our code reports 3325 constraints in 
+total.
+As a sanity check, within the core logic,
+it takes 6 constraints per addition, 5 constraints
 per doubling and 2 constraints per bit selection. This adds
 up to 13 constraints per bit, or 3315 constraints per
 group multiplication. 
 
-Now, in the case of GLV,
-% Let us first explain the obstacle of implementing the GLV
-%with R1CS. T
-the endomorphism is almost free: it requires 
-10 constraints. The MSM inside the GLV can also be done 
-with some $2200$ constraints using the above  double-then-add
-techniques.
-The difficult part is the circuit for scalar decomposition,
-which is to prove $n = n_1 +\lambda n_2 \bmod r$ where
-$n$ and $\lambda$ are around 256 bits,
-$n_1$ and $n_2$ are around 128 bits, and
-$r$
-is the order of the scalar field.
-It was estimated that this would add another $300$ constraints
-with hand optimization \cite{daira_telegram}. 
+% Now, in the case of GLV,
+% % Let us first explain the obstacle of implementing the GLV
+% %with R1CS. T
+% the endomorphism is almost free: it requires 
+% 10 constraints. The MSM inside the GLV can also be done 
+% with some $2200$ constraints using the above  double-then-add
+% techniques.
+% The difficult part is the circuit for scalar decomposition,
+% which is to prove $n = n_1 +\lambda n_2 \bmod r$ where
+% $n$ and $\lambda$ are around 256 bits,
+% $n_1$ and $n_2$ are around 128 bits, and
+% $r$
+% is the order of the scalar field.
+% It was estimated that this would add another $300$ constraints
+% with hand optimization \cite{daira_telegram}. 
 
-On the other hand, we can indeed perform a group operation
-over short Weierstrass form with 2361 constraints.
+%On the other hand, we can indeed perform a group operation
+%over short Weierstrass form with 2361 constraints.
 % (TBD: need to check with Arkworks people on this)
 
 % We therefore report the number of constraints to perform
