@@ -24,7 +24,7 @@ pdf:
 	git submodule init
 	git submodule update
 	cd paper && pdflatex bandersnatch.tex
-	cd paper && pbibtex bandersnatch.aux
+	cd paper && bibtex bandersnatch.aux
 	cd paper && pdflatex bandersnatch.tex
 	cd paper && pdflatex bandersnatch.tex
 
