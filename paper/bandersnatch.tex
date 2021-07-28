@@ -520,28 +520,28 @@ itself, and a 42\% improvement over the Jubjub curve.
 
 \paragraph{Multi-scalar-multiplications.}
 We report the performance of variable base 
-Multi-scalar-multiplications. Note that this MSM is 
+multi-scalar-multiplications. Note that this MSM is 
 compatible, but
 different
 from the MSM inside the GLV. 
-In particular, for a $k$ scalar multiplications,
+In particular, for a sum of $k$ scalar multiplications,
 we report the data point for 
 \begin{itemize}
   \item invoking the MSM over the $k$ base-scalar pairs where the
   scalar are randomly sampled, and are expected to be around 256 bits;
-  \item use GLV endomorphism to break the $k$ base-scalar pairs into 
+  \item using GLV endomorphism to break the $k$ base-scalar pairs into 
   $2k$ number of new base-scalar pairs, where the scalar are half sized,
   i.e., 128 bits.
 \end{itemize}
-The data are showing in Figure \ref{fig:msm}. Specifically, 
+The data are presented in Figure \ref{fig:msm}. Specifically, 
 as a baseline, the trivial solution, captained by 
 {\em GLV without 
-MSM}, is a simple extrapolation of number of bases times the cost of
+MSM}, is the product of number of bases and the cost of
 doing a single GLV multiplication. 
 Note that the MSM algorithms incur an overhead to build some
 tables, which makes them less favorable compared to the trivial
 solution when dimension is really small. For dimension greater 
-than 4, MSM algorithms begins to out-perform trivial solutions.
+than 4, MSM algorithms begin to out-perform trivial solutions.
 For dimension greater than 128, it is more efficient to 
 invoke the MSM directly, rather than doing it over the GLV basis.
 The reasons is that the size of the basis becomes too large, so
@@ -550,7 +550,7 @@ gain we get from halving the basis. We remark that this threshold
 point is platform depended.
 \begin{figure}[h]\centering \label{fig:msm}
   \includegraphics[width=12cm]{fig/msm.pdf}
-  \end{figure}
+\end{figure}
 
 
 % %\ZZ{todo: write about R1CS result}
