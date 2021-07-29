@@ -96,7 +96,7 @@ Table~\ref{tab:comp} shows a comparison of Bandersnatch curve
 and Jubjub curve. 
 Details deferred to Section~\ref{sec:comparison}.
 
-\begin{table}[h] %\small
+\begin{table}[ht] %\small
   \centering
   
   \begin{tabular}{|l|c|c|}\hline
@@ -303,7 +303,7 @@ The parameters are reproducible using the script
 of~\href{https://github.com/asanso/Bandersnatch/blob/main/code/get\_params.py}{this
   file}.
 
-\subsection{Weierstrass curve}
+\subsection{Weierstrass curve}\label{sec-w-curve}
 \paragraph{Curve equation.}
 The Bandersnatch curve can be represented in the Weierstrass model
 using the equation
@@ -331,15 +331,11 @@ t0=0x73eda753299d7d483339d80809a1d80553bda402fffe5bfefffffffef10be001.
 \end{verbatim}
 
 \paragraph{Subgroup generator.}
-A generator of the $p_{253}$-order subgroup is given by $E_W(x_W,y_W)$
-where:
-\begin{verbatim}
-  xW=0x72d12dcb2520ddddb7d26e93ac255607af27811e6b44745088b40f5c9877bfe6
-  yW=0x3379226315f3a722de23fc393216ca709b7f5ca335173f5c44e39f9c7e73f029.
-\end{verbatim}
-
-\AS{we might actually need to "justify" the choose of the generation. E.g. for BLS-12381: \textit{The generators of G1 and G2 are computed by finding the 
-lexicographically smallest valid x-coordinate, and its lexicographically smallesty-coordinate and scaling it by the cofactor such that the result is not the point at infinity.}}
+The generator of the $p_{253}$-order subgroup is computed by finding the
+lexicographically smallest valid $x$-coordinate of a point of the
+curve, and scaling it by the cofactor $4$ such that the result is not
+the point at infinity. From a point $P$ with $x=2$, we obtain $[4]P = E_W(x_W,y_W)$ where:
+\input{params-W.tex}
 
 \subsection{Twisted Edwards curve}
 \paragraph{Curve equation.}
@@ -376,11 +372,10 @@ c2=0x150f478323e54389c182cabeeae1fa155d29c5c24b3e595703e518e7e336084c.
 This map can be computed in 17 multiplications and 6 additions modulo $p$.
 
 \paragraph{Subgroup generator.}
-The generator of the $p_{253}$-order subgroup has twisted coordinates
-of the form $E_\text{TE}(1,y_\text{TE},1)$ with
-\begin{verbatim}
-yTE=0x32d4bac40a83da96b79a8024a7ba3a053d05c979c0c234d853a5547a5f0a3a20.
-\end{verbatim}
+The generator of the $p_{253}$-order subgroup obtained in
+Section~\ref{sec-w-curve} has twisted coordinates
+of the form $E_\text{TE}(x_\text{TE},y_\text{TE},1)$ with
+\input{params-TE.tex}
 
 \subsection{Montgomery curve}
 \paragraph{Curve equation.}
@@ -409,9 +404,7 @@ c=0x4247698f4e32ad45a293959b4ca17afa4a2d2317e4c6ce5023e1fd63d1b5de9a.
 \paragraph{Subgroup generator.}
 The generator of the $p_{253}$-order subgroup given above is of the
 form $E_M(x_M,-,1)$ with:
-\begin{verbatim}
-xM=0x6ade1c48fe482c38f81e8290a35de4c2b009e11f8c33a227c3ea0f6bd1afb8c6.
-\end{verbatim}
+\input{params-M.tex}
 
 \subsection{Security of Bandersnatch}
 
@@ -500,7 +493,7 @@ and a scalar field of 252 bits).
 When GLV is enabled, we report a 45\% improvement of Bandersnatch curve
 itself, and a 42\% improvement over the Jubjub curve.
 
-\begin{table}[h] %\small
+\begin{table}[ht] %\small
   \centering
   
   \begin{tabular}{|l|c|c|}\hline

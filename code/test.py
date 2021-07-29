@@ -69,9 +69,8 @@ C = Bandersnatch(p, a, d, L, r, cofactor, a1,a2,a3, b1,b2,b3, c1,c2)
 P = C.random_point()
 Q = C.random_point()
 
-# print(P)
 G = C.generator()
-# print(G.normalize())
+assert G.scalar_mul(r).is_zero() and not(G.is_zero())
 
 # psi
 R = P.psi()
@@ -88,7 +87,3 @@ n = random.randint(0,r)
 R1 = P_r.scalar_mul(n)
 R2 = P_r.fast_scalar_mul(n)
 assert R1 == R2
-
-# G = C.generator()
-# G1 = G.fast_scalar_mul(n)
-# print(G1.normalize())
