@@ -92,9 +92,9 @@ method~\cite{C:GalLamVan01}.
 We implement this curve in Rust, using
 the~\href{http://arkworks.rs}{Arkworks framework}, and release our
 code to the open domain~\cite{bandersnatch-rust}.
-Table \ref{tab:comp} shows a comparison of Bandersnatch curve
+Table~\ref{tab:comp} shows a comparison of Bandersnatch curve
 and Jubjub curve. 
-Details deferred to Section \ref{sec:comparison}.
+Details deferred to Section~\ref{sec:comparison}.
 
 \begin{table}[h] %\small
   \centering
@@ -481,7 +481,7 @@ as Montgomery ladders. Our non-GLV implementation also follows
 this design. For our GLV implementation, there are three components,
 namely, the endomorphism, the scalar decomposition, and the
 multi-scalar-multiplication (MSM). We implement those schemes and 
-present the micro-benchmarks in Table \ref{tab:comp_full}.
+present the micro-benchmarks in Table~\ref{tab:comp_full}.
 Specifically, we do not use the MSM implementation in Arkworks:
 our scalars, after the decomposition, contain roughly 128 bits
 of leading zeros, and our own MSM implementation is 
@@ -494,7 +494,7 @@ fixed generators nonetheless. We then sample field elements
 uniformly at random, for each new iteration, and the benchmark
 result is consolidated over 100 iterations.
 
-Table \ref{tab:comp_full} presents the full picture of the benchmark.
+Table~\ref{tab:comp_full} presents the full picture of the benchmark.
 When GLV is disabled, we observe a similar but a little worse 
 performance for Bandersnatch curve, compared to
 the Jubjub curve, due to the slightly larger coefficient 
@@ -535,7 +535,7 @@ we report the data point for
   $2k$ number of new base-scalar pairs, where the scalar are half sized,
   i.e., 128 bits.
 \end{itemize}
-The data are presented in Figure \ref{fig:msm}. Specifically, 
+The data are presented in Figure~\ref{fig:msm}. Specifically, 
 as a baseline, the trivial solution, captained by 
 {\em GLV without 
 MSM}, is the product of number of bases and the cost of
@@ -610,7 +610,7 @@ group multiplication.
 % short Weierstrass form, for which we can argue the 
 % relationship over the projective coordinates.
 % This effectively reduces the number of constraints to
-% 2361, or a 39\% improvement, as shown in Table \ref{tab:comp}.
+% 2361, or a 39\% improvement, as shown in Table~\ref{tab:comp}.
 % Note that Jubjub also has a Weierstrass form, but it is 
 % not as useful. 
   
@@ -636,7 +636,7 @@ group multiplication.
 
 
 % When GLV is enabled, this will be reduced to 1468.
-% Precisely, we list the breakdown numbers in Table \ref{tab:r1cs_full};
+% Precisely, we list the breakdown numbers in Table~\ref{tab:r1cs_full};
 
 % \begin{table}[h] %\small
 %   \centering
