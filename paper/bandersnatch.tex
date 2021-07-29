@@ -22,7 +22,7 @@
 
 \theoremstyle{definition}
 \newtheorem*{remark}{Remark}
-\newtheorem*{example}{Example}
+%% \newtheorem*{example}{Example}
 
 
 \title{Bandersnatch: a fast elliptic curve built over the BLS12-381
@@ -51,15 +51,16 @@
 
 \section{Introduction}
 %BLS12-381
-BLS12-381 is a pairing-friendly curve created by Sean Bowe in
-2017~\cite{bls12381}.
+BLS12-381 is a pairing-friendly curve created by Sean
+Bowe~\href{https://electriccoin.co/blog/new-snark-curve/}{here} in 2017.
 Currently, BLS12-381 is universally used for digital
 signatures and zero-knowledge proofs by many project orbiting in the
 blockchin universe: Zcash, Ethereum 2.0, Anoma, Skale, Algorand, Dfinity,
 Chia, and more.
 %jubjub
-The ZCash team also introduced another curve called
-Jubjub~\cite{jubjub}, built over the BLS12-381 scalar field $\mathbb
+The ZCash team also
+introduced~\href{https://z.cash/technology/jubjub/}{here} another
+curve called Jubjub, built over the BLS12-381 scalar field $\mathbb
 F_{r_\text{BLS}}$.
 This curve is not pairing-friendly, but leads to constructions where
 $\mathbb F_{r_\text{BLS}}$ arithmetic circuits can be manipulated
@@ -88,8 +89,9 @@ elliptic using the Complex Multiplication method, where the scalar
 multiplication algorithm is efficient thanks to the GLV
 method~\cite{C:GalLamVan01}.
 
-We implement this curve in Rust, using the Arkworks framework~\cite{arkworks}, 
-and release our code to the open domain~\cite{arkworks,bandersnatch-rust}. 
+We implement this curve in Rust, using
+the~\href{http://arkworks.rs}{Arkworks framework}, and release our
+code to the open domain~\cite{bandersnatch-rust}.
 Table \ref{tab:comp} shows a comparison of Bandersnatch curve
 and Jubjub curve. 
 Details deferred to Section \ref{sec:comparison}.
@@ -144,7 +146,7 @@ scalar multiplication over particular curve. In a nutshell, it applies
 to elliptic curves where an endomorphism $\psi$ can be efficiently computed.
 The GLV method applies in particular for $j=0$ (resp. $1728$) curves
 because a non-trivial automorphism can be computed using only one
-modular multiplication (see Example~\ref{ex:psi-j0}).
+modular multiplication. % (see Example~\ref{ex:psi-j0}).
 The method also applies for other curves where the endomorphism is
 slightly more expensive, called \emph{small discriminant} curves.
 
@@ -170,14 +172,14 @@ of degree $O(D)$ thanks to the Vélu's formulas~\cite{velu71}.
 Thus, the evaluation of $\psi$ is efficient only for curves of small
 discriminant.
 
-\begin{example}\label{ex:psi-j0}
-  Let $p\equiv 1$ mod $3$, and $E:y^2=x^3+1$.
-  $E$ has discriminant $-3$ and $\End(E) \simeq
-  \Z\left[\frac{1+\sqrt{-3}}{2}\right]$. The endomorphism $\psi$
-  corresponding to $\frac{1+\sqrt{-3}}2$ can be
-    computed as $\psi(x,y) = (\beta x, y)$ where $\beta$ is an order
-    $3$ element of $\Fp$.
-\end{example}
+%% \begin{example}\label{ex:psi-j0}
+%%   Let $p\equiv 1$ mod $3$, and $E:y^2=x^3+1$.
+%%   $E$ has discriminant $-3$ and $\End(E) \simeq
+%%   \Z\left[\frac{1+\sqrt{-3}}{2}\right]$. The endomorphism $\psi$
+%%   corresponding to $\frac{1+\sqrt{-3}}2$ can be
+%%     computed as $\psi(x,y) = (\beta x, y)$ where $\beta$ is an order
+%%     $3$ element of $\Fp$.
+%% \end{example}
 
 In this work, we restrict to curves defined over the BLS12-381 scalar
 field, and also look for cryptographic security. Curves with $-D=-3$
@@ -463,12 +465,13 @@ We benchmarked our implementation with both GLV enabled and disabled, and
 compared it with Arkworks' own Jubjub implementation. 
 Our benchmark is conducted over an AMD 5900x CPU, with Ubuntu 20.04,
 rust 1.52 stable version, and Arkwork 0.3.0 release version.
-We used \texttt{criterion} micro-benchmark toolchain,  version 0.3.0~\cite{criterion},
-for data collection. We compile Arkworks with two options, namely
-\texttt{default} and \texttt{asm}, respectively.
-The \texttt{default} setup relies on \texttt{num\_bigint} crate for 
-large integer arithmetics, while \texttt{asm}
-turns on assembly for finite field multiplication.
+We used~\href{https://docs.rs/criterion}{\texttt{criterion}
+  micro-benchmark toolchain},  version 0.3.0, for data collection. We
+compile Arkworks with two options, namely \texttt{default} and
+\texttt{asm}, respectively.
+The \texttt{default} setup relies on \texttt{num\_bigint} crate for
+large integer arithmetics, while \texttt{asm} turns on assembly for
+finite field multiplication. 
 
 
 In a bit more details, Arkworks use the aforementioned
