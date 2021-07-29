@@ -185,9 +185,11 @@ discriminant.
 %% \end{example}
 
 In this work, we restrict to curves defined over the BLS12-381 scalar
-field, and also look for cryptographic security. Curves with $-D=-3$
-and $-4$ do not have a large prime subgroup defined over $\Fp$. Hence,
-we look for small discriminant $-D<-4$ curves with subgroup and
+field $\mathbb F_{r_\text{BLS}}$. From now, we denote $p=r_\text{BLS}$
+and we look for curves with a $128$-bit cryptographic security.
+Curves with $-D=-3$ and $-4$ do not have a large prime subgroup
+defined over $\Fp$.
+Hence, we look for small discriminant $-D<-4$ curves with subgroup and
 twist-subgroup security. It means that $\#E(\Fp)$ has a roughly 256-bit
 prime factor, as well as $\#E^t(\Fp)$.
 
