@@ -58,16 +58,16 @@ signatures and zero-knowledge proofs by many project orbiting in the
 blockchin universe: Zcash, Ethereum 2.0, Anoma, Skale, Algorand, Dfinity,
 Chia, and more.
 %jubjub
-The ZCash team also
-introduced~\href{https://z.cash/technology/jubjub/}{here} another
-curve called Jubjub, built over the BLS12-381 scalar field $\mathbb
+The ZCash team
+introduced~\href{https://z.cash/technology/jubjub/}{here} Jubjub, an
+elliptic curve built over the BLS12-381 scalar field $\mathbb
 F_{r_\text{BLS}}$.
 This curve is not pairing-friendly, but leads to constructions where
 $\mathbb F_{r_\text{BLS}}$ arithmetic circuits can be manipulated
 using the BLS12-381 curve.
 The Jubjub curve can be represented in the twisted Edwards
 coordinates, allowing efficiency inside zk-SNARK circuits.
-In order for some cryptographic application to scale, it is needed to
+In order for some cryptographic applications to scale, it is needed to
 have efficient scalar multiplication on the non-pairing-friendly
 curve.
 The main drawback of Jubjub is the slow scalar multiplication
@@ -85,9 +85,9 @@ The Jubjub curve is a curve with a large discriminant, meaning that
 the GLV method is not possible on this curve.
 We performed an exhaustive search of curves of small discriminant,
 defined over the BLS12-381 scalar field. This way, we obtain an
-elliptic using the Complex Multiplication method, where the scalar
-multiplication algorithm is efficient thanks to the GLV
-method~\cite{C:GalLamVan01}.
+elliptic curve using the Complex Multiplication
+method~\cite{MC:AtkMor93}, where the scalar multiplication algorithm
+is efficient thanks to the GLV method~\cite{C:GalLamVan01}.
 
 We implement this curve in Rust, using
 the~\href{http://arkworks.rs}{Arkworks framework}, and release our
@@ -118,7 +118,7 @@ a common approach for expressing circuits for zero-knowledge
 proof systems. 
 A group multiplication takes 
 3325
-constraints when the point is in Affine form over the 
+constraints when the point is in affine form over the 
 twisted Edwards curve.
 %, and 
 %2361
@@ -132,7 +132,7 @@ In Section~\ref{sec:small-disc-curves}, we describe how we obtained
 several curves allowing the GLV method together with cryptographic
 security.
 Then, we introduce in Section~\ref{sec:bandersnatch} the Bandersnatch
-curve in different models (in Weierstrass, Montgomery and Twisted Edwards
+curve in different models (in Weierstrass, Montgomery and twisted Edwards
 coordinates).
 Finally, we compare the scalar multiplication algorithm over
 the Bandersnatch and the Jubjub curves in
@@ -144,9 +144,9 @@ Section~\ref{sec:comparison} in a practical point of view.
 The GLV method~\cite{C:GalLamVan01} is a well known trick for accelerating the
 scalar multiplication over particular curve. In a nutshell, it applies
 to elliptic curves where an endomorphism $\psi$ can be efficiently computed.
-The GLV method applies in particular for $j=0$ (resp. $1728$) curves
-because a non-trivial automorphism can be computed using only one
-modular multiplication. % (see Example~\ref{ex:psi-j0}).
+The GLV method applies in particular for $j$-invariant $j=0$
+(resp. $j=1728$) curves because a non-trivial automorphism can be
+computed using only one modular multiplication. % (see Example~\ref{ex:psi-j0}).
 The method also applies for other curves where the endomorphism is
 slightly more expensive, called \emph{small discriminant} curves.
 
@@ -166,7 +166,7 @@ From now, we denote $-D$ to be the discriminant of $\End(E)$, and
 $\{\text{Id},\psi\}$ a basis of the endomorphism ring.
 The fundamental discriminant corresponds to the discriminant of the
 maximal order containing $\End(E)$.
-This way, $\psi$ is a degree $\frac{D+1}4$ or $D/4$ depending on the
+This way, $\psi$ is of degree $\frac{D+1}4$ or $D/4$ depending on the
 value of $D$ modulo $4$, and $\psi$ can be defined using polynomials
 of degree $O(D)$ thanks to the Vélu's formulas~\cite{velu71}.
 Thus, the evaluation of $\psi$ is efficient only for curves of small
@@ -190,16 +190,13 @@ prime factor, as well as $\#E^t(\Fp)$.
 
 As the endomorphism cost is closely related to the discriminant, we
 restrict to $-D \geq -388$ so that $\psi$ can be efficiently computed.
-Moreover, we restrict on fundamental discriminants:
-\begin{itemize}
-  \item Fundamental discriminants are the discriminant of the maximal
-    orders of imaginary quadratic fields. We denote $\mathcal O_{-D}$ the
-    maximal order of discriminant $-D$.
-  \item Elliptic curves with $\End(E) \subset \mathcal O_{-D}$ are isogenous
-    curves, meaning that there is a rational map between them.
-  \item Isogenous curves have the same order so that we can restrict
-    on fundamental discriminants for our search.
-\end{itemize}
+Moreover, we restrict on fundamental discriminants (discriminants
+of the maximal orders of imaginary quadratic fields). We denote
+$\mathcal O_{-D}$ the maximal order of discriminant $-D$. Elliptic
+curves with $\End(E) \subset \mathcal O_{-D}$ are isogenous curves,
+meaning that there is a rational map between them. Isogenous curves
+have the same order so that we can restrict on fundamental
+discriminants for our search.
 
 We compute an exhaustive search among all the possible (fundamental)
 discriminants ($-292 \leq -D \leq -3$).
@@ -522,7 +519,7 @@ itself, and a 42\% improvement over the Jubjub curve.
 
 \paragraph{Multi-scalar-multiplications.}
 We report the performance of variable base 
-multi-scalar-multiplications. Note that this MSM is 
+multi-scalar-multiplications (MSM). Note that this MSM is 
 compatible, but
 different
 from the MSM inside the GLV. 
@@ -603,7 +600,7 @@ group multiplication.
 % a group operation on both Jubjub curve and Bandersnatch 
 % curve. We observe that it takes 3325 constraints for the 
 % Jubjub curve, for which the statement is argued over 
-% the Edwards Affine form coordinates. 
+% the Edwards affine form coordinates. 
 % It also takes a same number of constraints
 % for Bandersnatch when its coordinates are in this form. 
 % However, the Bandersnatch curve also supports a 
