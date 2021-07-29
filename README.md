@@ -89,3 +89,8 @@ in progress, available using
 make pdf
 evince paper/bandersnatch.pdf
 ```
+
+## Reference implementation
+We provide two reference implementations
+- [python](https://github.com/asanso/Bandersnatch/tree/main/python-ref-impl)
+- [rust](https://github.com/zhenfeizhang/bandersnatch)
