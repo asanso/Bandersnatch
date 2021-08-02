@@ -4,21 +4,21 @@ all_projects:=$(project)
 all: test bench getparams pdf
 
 curvesearch: 
-	sage code/small-disc-curves.py
+	sage python-ref-impl/small-disc-curves.py
 
 getparams:
-	sage code/get_params.py
+	sage python-ref-impl/get_params.py
 
 test:
-	sage code/test.py
+	sage python-ref-impl/test.py
 
 bench:
-	sage code/bench.py
+	sage python-ref-impl/bench.py
 
 clean_params:
-	rm -vf code/params-W.py
-	rm -vf code/params-M.py
-	rm -vf code/params-TE.py
+	rm -vf python-ref-impl/params-W.py
+	rm -vf python-ref-impl/params-M.py
+	rm -vf python-ref-impl/params-TE.py
 
 pdf:
 	git submodule init
