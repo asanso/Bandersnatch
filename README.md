@@ -36,13 +36,13 @@ Bandersnatch has `j=8000` and `-D=-8`, meaning that it has a fast endomorphism
 algorithm on the subgroup of order `r`.
 We provide three models in order to describe our curve, together with
 the coefficients for computing this endomorphism.
-Three files (`code/params-W.py`, `code/params-M.py` and
-`code/params-TE.py`) can be generated using
+Three files (`python-ref-impl/params-W.py`, `python-ref-impl/params-M.py` and
+`python-ref-impl/params-TE.py`) can be generated using
 ```shell
 make getparams
 ```
 * In affine Weierstrass coordinates.<br>
-The file `code/params-W.py` contains the curve parameters `p, a, b` such
+The file `python-ref-impl/params-W.py` contains the curve parameters `p, a, b` such
 that the Weierstrass equation of the curve over `GF(p)` is `y**2 =
 x**3 + a*x + b`. It also includes the coefficients
 `r0,r1,s0,t0,t1,u2,u3` such that
@@ -50,14 +50,14 @@ x**3 + a*x + b`. It also includes the coefficients
 psi_W(x,y) = ( u2*((x+r1)*x+r0)/(x+s0) , u3*y*((x+t1)*x+t0)/(x+s0)**2 )
 ```
 * In projective `x-z` Montgomery coordinates.<br>
-The file `code/params-M.py` includes the parameters of the Montgomery curve
+The file `python-ref-impl/params-M.py` includes the parameters of the Montgomery curve
 `B*y**2 = x**3 + A*x**2 + x` over `GF(p)`, together with the
 coefficient `c` for the endomorphism in projective `x-z` coordinates:
 ```python3
 psi_M(x,z) = ( -(x-z)**2 - c * x * z , 2 * x * z )
 ```
 * In projective Twisted Edwards coordinates.<br>
-The file `code/params-TE.py` includes the parameters of the curve in the
+The file `python-ref-impl/params-TE.py` includes the parameters of the curve in the
 form `a*x**2 + y**2 = 1 + d * x**2 * y**2`, and the endomorphism
 coefficients `a1,a2,a3,b1,b2,b3,c1,c2` such that
 ```python3
@@ -68,7 +68,7 @@ b1 * (y+b2*z) * (y+b3*z) * z**2 * y , (y+c1*z) * (y+c2*z) * z**2 * y )
 ## Comparison with Jubjub
 
 We implemented a non-optimized elliptic curve group law arithmetic in
-`code/curve.py` and `code/bandersnatch.py`.
+`python-ref-impl/curve.py` and `python-ref-impl/bandersnatch.py`.
 Our benchmarks lead to a Bandersnatch scalar multiplication ~35%
 faster than on Jubjub.
 This estimation can be reproducible using
