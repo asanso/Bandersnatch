@@ -444,20 +444,21 @@ The twisted Edwards representation is mostly used in practice, and we
 now focus on the comparison between Jubjub and Bandersnatch in this
 model.
 
-\paragraph{Jubjub scalar multiplication.}
+\subsection{Scalar multiplication for a variable base point}
+%\paragraph{Jubjub scalar multiplication.}
 Because of its large discriminant, the scalar multiplication on Jubjub
 is a basic double-and-add algorithm, meaning that it computes a
 multiplication by $n$ in $\log n$ doublings and $\log n/2$
 additions (in average) on the curve. 
 
-\paragraph{Bandersnatch scalar multiplication.}
+%\paragraph{Bandersnatch scalar multiplication.}
 The endomorphism $\psi$ lets us compute the scalar multiplication
 faster than a double-and-add algorithm with few precomputations. For a
 point $P$ and a scalar $n$, we first evaluate $\psi$ at $P$ and
 decompose $n = n_1 + \lambda n_2$. Then a multi scalar multiplication
 is computed in $\log n/2$ doublings and $3\log n/8$ additions (in average) on the curve.
 
-\paragraph{Benchmarks.}
+%\paragraph{Benchmarks.}
 We benchmarked our implementation with both GLV enabled and disabled, and 
 compared it with Arkworks' own Jubjub implementation. 
 Our benchmark is conducted over an AMD 5900x CPU, with Ubuntu 20.04,
@@ -469,7 +470,6 @@ compile Arkworks with two options, namely \texttt{default} and
 The \texttt{default} setup relies on \texttt{num\_bigint} crate for
 large integer arithmetics, while \texttt{asm} turns on assembly for
 finite field multiplication. 
-
 
 In a bit more details, Arkworks use the aforementioned
 double-and-add
@@ -483,13 +483,6 @@ Specifically, we do not use the MSM implementation in Arkworks:
 our scalars, after the decomposition, contain roughly 128 bits
 of leading zeros, and our own MSM implementation is 
 optimized for this setting.
-
-To have a meaningful comparison, we benchmark
-the cost of group multiplication over the fixed, default generator.
-Note that Arkworks do not implement optimizations for 
-fixed generators nonetheless. We then sample field elements 
-uniformly at random, for each new iteration, and the benchmark
-result is consolidated over 100 iterations.
 
 Table~\ref{tab:comp_full} presents the full picture of the benchmark.
 When GLV is disabled, we observe a similar but a little worse 
@@ -517,7 +510,18 @@ itself, and a 42\% improvement over the Jubjub curve.
   \label{tab:comp_full}
 \end{table}
 
-\paragraph{Multi-scalar-multiplications.}
+\subsection{Scalar multiplication for a fixed base point}
+
+To have a meaningful comparison, we benchmark
+the cost of group multiplication over the fixed, default generator.
+Note that Arkworks do not implement optimizations for 
+fixed generators nonetheless. We then sample field elements 
+uniformly at random, for each new iteration, and the benchmark
+result is consolidated over 100 iterations.
+
+\SM{missing something to say about fixed base point SM}
+
+\subsection{Multi-scalar-multiplications}
 We report the performance of variable base 
 multi-scalar-multiplications (MSM). Note that this MSM is 
 compatible, but
@@ -530,7 +534,7 @@ we report the data point for
   scalars are randomly sampled, and are expected to be around 256 bits;
   \item using GLV endomorphism to break the $k$ base-scalar pairs into 
   $2k$ number of new base-scalar pairs, where the scalars are half sized,
-  i.e., 128 bits.
+  i.e.~128 bits.
 \end{itemize}
 The data are presented in Figure~\ref{fig:msm}. Specifically, 
 as a baseline, the trivial solution, captained by 
@@ -551,9 +555,7 @@ point is platform depended.
   \includegraphics[width=12cm]{fig/msm.pdf}
 \end{figure}
 
-
-% %\ZZ{todo: write about R1CS result}
-\paragraph{R1CS constraints.}
+\subsection{R1CS constraints}
 Bandersnatch curve is zk-SNARK friendly: its 
 base field matches the scalar field for BLS12-381 curve, a 
 pairing-friendly curve, on top of which people build zk-SNARK
@@ -620,7 +622,7 @@ group multiplication.
 % to the cost of a non-GLV circuit over the projective 
 % coordinates. In addition to that, the biggest cost that 
 % GLV incurs is to argue the correctness of the scalar 
-% decomposition, i.e., for a scalar $s$, we need to argue 
+% decomposition, i.e.~for a scalar $s$, we need to argue 
 % that $s = k_1 + k_2 \lambda$ over the scalar field of the
 % Bandersnatch curve, 
 % for some fixed $\lambda$. To date, we do not have an 
