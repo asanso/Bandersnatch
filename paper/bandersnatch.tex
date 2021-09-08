@@ -58,7 +58,10 @@
 %BLS12-381
 BLS12-381 is a pairing-friendly curve created by Sean
 Bowe~\href{https://electriccoin.co/blog/new-snark-curve/}{here} in 2017.
-Currently, BLS12-381 is universally used for digital
+Currently, BLS12-381 is undergoing a standardization process 
+from 
+IRTF Crypto Forum Research Group, and is
+universally used for digital
 signatures and zero-knowledge proofs by many project orbiting in the
 blockchain universe: Zcash, Ethereum 2.0, \href{https://anoma.network}{Anoma}, Skale, Algorand, Dfinity,
 Chia, and more.
@@ -510,7 +513,7 @@ itself, and a 42\% improvement over the Jubjub curve.
   \label{tab:comp_full}
 \end{table}
 
-\subsection{Scalar multiplication for a fixed base point}
+
 
 To have a meaningful comparison, we benchmark
 the cost of group multiplication over the fixed, default generator.
@@ -519,7 +522,13 @@ fixed generators nonetheless. We then sample field elements
 uniformly at random, for each new iteration, and the benchmark
 result is consolidated over 100 iterations.
 
+\subsection{Scalar multiplication for a fixed base point}
+We also implemented scalar multiplications with fixed bases. 
+
+
 \SM{missing something to say about fixed base point SM}
+
+\ZZ{WIP}
 
 \subsection{Multi-scalar-multiplications}
 We report the performance of variable base 
@@ -662,7 +671,7 @@ group multiplication.
 
 \bigskip
 \paragraph*{\textbf{Acknowledgments.}} We would like to thank Weikeng Chen, Luca De
-Feo, Justin Drake, Dankrad Feist and Daira Hopwood for
+Feo, Justin Drake, Dankrad Feist, Gottfried Herold and Daira Hopwood for
 fruitful discussions.
 
 \bibliography{bandersnatch,cryptobib/abbrev3,cryptobib/crypto}
