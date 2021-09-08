@@ -51,7 +51,11 @@
  built over the BLS12-381 scalar field. The curve is equipped with an efficient
  endomorphism, allowing a fast scalar multiplication algorithm.
  Our benchmark shows that the multiplication is 42\% faster, 
- compared to another curve called Jubjub, having similar properties.
+ compared to another curve called Jubjub, having similar properties. Nonetheless,
+ Bandersnatch to not provide any performance improvement for either 
+ rank 1 constraint systems (R1CS) or multi-scalar-multiplications, compared to
+ the Jubjub curve.
+
 \end{abstract}
 
 \section{Introduction}
@@ -516,19 +520,24 @@ itself, and a 42\% improvement over the Jubjub curve.
 
 
 To have a meaningful comparison, we benchmark
-the cost of group multiplication over the fixed, default generator.
+the cost of group multiplication over the default generators.
 Note that Arkworks do not implement optimizations for 
 fixed generators nonetheless. We then sample field elements 
 uniformly at random, for each new iteration, and the benchmark
 result is consolidated over 100 iterations.
 
 \subsection{Scalar multiplication for a fixed base point}
+\ZZ{I incline to remove this subsection completely}
 We also implemented scalar multiplications with fixed bases. 
+In short, for fixed base scalar multiplications, having an 
+endomorphism does not
+improve the overall performance. Nonetheless, it is worth
+pointing out that the endomorphism does improve the storage
+size by a factor of 2, for a fixed window size.
 
+%\SM{missing something to say about fixed base point SM}
 
-\SM{missing something to say about fixed base point SM}
-
-\ZZ{WIP}
+%\ZZ{WIP}
 
 \subsection{Multi-scalar-multiplications}
 We report the performance of variable base 
@@ -585,7 +594,8 @@ As a sanity check, within the core logic,
 it takes 6 constraints per addition, 5 constraints
 per doubling and 2 constraints per bit selection. This adds
 up to 13 constraints per bit, or 3315 constraints per
-group multiplication. 
+group multiplication (and we reasonably assume some system overhead
+consume another 10 constraints). 
 
 % Now, in the case of GLV,
 % % Let us first explain the obstacle of implementing the GLV
@@ -668,6 +678,19 @@ group multiplication.
 %The \href{https://github.com/zhenfeizhang/bandersnatch-glv}{Rust implementation} of the Bandersnatch scalar multiplication
 %algorithm confirms our estimations: the GLV method is $40\%$ faster
 %than the Jubjub implementation.
+
+\section{Conclusion}
+Last decade has seen great improvement on practical zk-snark systems.
+One of an essential stepping stone is an efficient elliptic curve whose base field
+matches the scalar  field for some pairing friendly curve. 
+In this note, we present Bandersnatch as an alternative to the common used
+base curve, Jubjub. Due to the existence of GLV endomorphism, group 
+operation over our curve is 42\% times faster than that of Jubjub curve.
+For multi-scalar-multiplications, we report a narrowed advantage over Jubjub 
+curve when the dimension is small; and no advantage for medium to large dimensions.
+We also do not observe any improvement in terms of number of constraints in 
+the corresponding R1CS circuit.
+
 
 \bigskip
 \paragraph*{\textbf{Acknowledgments.}} We would like to thank Weikeng Chen, Luca De
