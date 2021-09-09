@@ -537,13 +537,12 @@ compatible, but
 different
 from the MSM inside the GLV. 
 In particular, for a sum of $k$ scalar multiplications,
-we report the data point for 
+we report the data point for: 
 \begin{itemize}
-  \item invoking the MSM over the $k$ base-scalar pairs where the
-  scalars are randomly sampled, and are expected to be around 256 bits;
-  \item using GLV endomorphism to break the $k$ base-scalar pairs into 
-  $2k$ number of new base-scalar pairs, where the scalars are half sized,
-  i.e.~128 bits.
+  \item invoking the MSM over the $k$ base scalars randomly sampled,
+    expected to be around 256 bits;
+  \item using GLV endomorphism to break the $k$ base scalar into $2k$
+    new base-scalar, of size halved, i.e.~of 128 bits.
 \end{itemize}
 The data are presented in Figure~\ref{fig:msm}. Specifically, 
 as a baseline, the trivial solution, captained by 
