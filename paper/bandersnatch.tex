@@ -10,7 +10,6 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 
-%% \newcommand{\AS}[1]{\color{red}#1\color{black}}
 \newcommand{\SM}[1]{\color{blue}#1\color{black}}
 \newcommand{\ZZ}[1]{\color{cyan}#1\color{black}}
 \newcommand{\AS}[1]{\color{red}#1\color{black}}
@@ -22,8 +21,6 @@
 
 \theoremstyle{definition}
 \newtheorem*{remark}{Remark}
-%% \newtheorem*{example}{Example}
-
 
 \title{Bandersnatch: a fast elliptic curve built over the BLS12-381
   scalar field}
@@ -51,7 +48,7 @@
  built over the BLS12-381 scalar field. The curve is equipped with an efficient
  endomorphism, allowing a fast scalar multiplication algorithm.
  Our benchmark shows that the multiplication is 42\% faster, 
- compared to another curve called Jubjub, having similar
+ compared to another curve, called Jubjub, having similar
  properties. Nonetheless, Bandersnatch does not provide any
  performance improvement for either rank 1 constraint systems (R1CS)
  or multi scalar multiplications, compared to the Jubjub curve.
@@ -62,15 +59,15 @@
 BLS12-381 is a pairing-friendly curve created by Sean
 Bowe~\href{https://electriccoin.co/blog/new-snark-curve/}{here} in 2017.
 Currently, BLS12-381 is undergoing a standardization process 
-from 
+from the
 IRTF Crypto Forum Research Group, and is
 universally used for digital
-signatures and zero-knowledge proofs by many project orbiting in the
+signatures and zero-knowledge proofs by many projects orbiting in the
 blockchain universe: Zcash, Ethereum 2.0, \href{https://anoma.network}{Anoma}, Skale, Algorand, Dfinity,
 Chia, and more.
 %jubjub
 The ZCash team
-introduced~\href{https://z.cash/technology/jubjub/}{here} Jubjub, an
+introduced Jubjub~\href{https://z.cash/technology/jubjub/}{here}, an
 elliptic curve built over the BLS12-381 scalar field $\mathbb
 F_{r_\text{BLS}}$.
 This curve is not pairing-friendly, but leads to constructions where
@@ -78,11 +75,11 @@ $\mathbb F_{r_\text{BLS}}$ arithmetic circuits can be manipulated
 using the BLS12-381 curve.
 The Jubjub curve can be represented in the twisted Edwards
 coordinates, allowing efficiency inside zk-SNARK circuits.
-In order for some cryptographic applications to scale, it is needed to
+In order for some cryptographic applications to scale, it is necessary to
 have efficient scalar multiplication on the non-pairing-friendly
 curve.
 The main drawback of Jubjub is the slow scalar multiplication
-algorithm, compared for example with the ``Bitcoin curve''
+algorithm compared, for example, with the ``Bitcoin curve''
 (SECP256k1).
 It comes from the fact that the curve does not have an efficiently
 computable endomorphism, necessary for computing scalar
@@ -152,7 +149,7 @@ Section~\ref{sec:comparison} from a practical point of view.
 
 \section{Small discriminant curves}\label{sec:small-disc-curves}
 
-The GLV method~\cite{C:GalLamVan01} is a well known trick for accelerating the
+The GLV method~\cite{C:GalLamVan01} is a well known trick for accelerating
 scalar multiplication over particular curve. In a nutshell, it applies
 to elliptic curves where an endomorphism $\psi$ can be efficiently computed.
 The GLV method applies in particular for $j$-invariant $j=0$
@@ -183,15 +180,6 @@ of degree $O(D)$ thanks to the Vélu's formulas~\cite{velu71}.
 Thus, the evaluation of $\psi$ is efficient only for curves of small
 discriminant.
 
-%% \begin{example}\label{ex:psi-j0}
-%%   Let $p\equiv 1$ mod $3$, and $E:y^2=x^3+1$.
-%%   $E$ has discriminant $-3$ and $\End(E) \simeq
-%%   \Z\left[\frac{1+\sqrt{-3}}{2}\right]$. The endomorphism $\psi$
-%%   corresponding to $\frac{1+\sqrt{-3}}2$ can be
-%%     computed as $\psi(x,y) = (\beta x, y)$ where $\beta$ is an order
-%%     $3$ element of $\Fp$.
-%% \end{example}
-
 In this work, we restrict to curves defined over the BLS12-381 scalar
 field $\mathbb F_{r_\text{BLS}}$. From now, we denote $p=r_\text{BLS}$
 and we look for curves with a $128$-bit cryptographic security.
@@ -214,7 +202,7 @@ discriminants for our search.
 We compute an exhaustive search among all the possible (fundamental)
 discriminants ($-292 \leq -D \leq -3$).
 Given a discriminant $-D$, roughly half of the curves are
-supersingular and hence not interesting for our cryptographic
+supersingular and hence not relevant to our cryptographic
 applications.
 We list in Table~\ref{tab:group-order-factorization} the ordinary
 curves we obtained. In this table, $p_n$ denotes a prime of $n$ bits.
@@ -291,7 +279,7 @@ method, based on the Hilbert class polynomial $H_{-D}(X)$.
 The roots of $H_{-D}$ are $j$-invariants of elliptic curves whose
 endomorphism ring is of discriminant $-D$.
 From a $j$-invariant, we obtain the curve equation in different
-models. Before looking into details three different representations,
+models. Before looking into the details of three different representations,
 we briefly recall how to exhibit the degree $2$ endomorphism $\psi$.
 
 \paragraph{Degree 2 endomorphism.}
@@ -325,13 +313,6 @@ $$E_W:y^2 = x^3 -3763200000x -78675968000000.$$
 %% p=0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001
 %% E=EllipticCurve(GF(p), [-3763200000, -78675968000000])
 %% \end{verbatim}
-
-%% \begin{remark}
-%%   Using SageMath, \texttt{EllipticCurve\_from\_j(8000)} computes a
-%%   Weierstrass equation of the quadratic twist of Bandersnatch.
-%%   Bandersnatch can then be obtained using
-%%   \texttt{EllipticCurve\_from\_j(8000).quadratic\_twist()}.
-%% \end{remark}
 
 \paragraph{Endomorphism.}
 The endomorphism $\psi$ can obtained using the method detailed above.
@@ -443,21 +424,21 @@ The twisted Edwards representation is mostly used in practice, and we
 now focus on the comparison between Jubjub and Bandersnatch in this
 model.
 
-\subsection{Scalar multiplication}
-%\paragraph{Jubjub scalar multiplication.}
+\subsection{Scalar multiplications for a variable base point}
+% Jubjub scalar multiplication
 Because of its large discriminant, the scalar multiplication on Jubjub
 is a basic double-and-add algorithm, meaning that it computes a
 multiplication by $n$ in $\log n$ doublings and $\log n/2$
 additions (in average) on the curve. 
 
-%\paragraph{Bandersnatch scalar multiplication.}
+% Bandersnatch scalar multiplication
 The endomorphism $\psi$ lets us compute the scalar multiplication
 faster than a double-and-add algorithm with few precomputations. For a
 point $P$ and a scalar $n$, we first evaluate $\psi$ at $P$ and
 decompose $n = n_1 + \lambda n_2$. Then a multi scalar multiplication
 is computed in $\log n/2$ doublings and $3\log n/8$ additions (in average) on the curve.
 
-%\paragraph{Benchmarks.}
+% Benchmarks
 We benchmarked our implementation with both GLV enabled and disabled, and 
 compared it with Arkworks' own Jubjub implementation. 
 Our benchmark is conducted over an AMD 5900x CPU, with Ubuntu 20.04,
@@ -470,8 +451,7 @@ The \texttt{default} setup relies on \texttt{num\_bigint} crate for
 large integer arithmetics, while \texttt{asm} turns on assembly for
 finite field multiplication. 
 
-In a bit more details, Arkworks use the aforementioned
-double-and-add
+Arkworks use the aforementioned double-and-add
 multiplication methodology, without side channel protections such 
 as Montgomery ladders. Our non-GLV implementation also follows
 this design. For our GLV implementation, there are three components,
@@ -489,8 +469,8 @@ performance for Bandersnatch curve, compared to
 the Jubjub curve, due to the slightly larger coefficient 
 $a=-5$ and a larger scalar field of 253 bits (Jubjub curve has $a=-1$
 and a scalar field of 252 bits).
-When GLV is enabled, we report a 45\% improvement of Bandersnatch curve
-itself, and a 42\% improvement over the Jubjub curve.
+When GLV is enabled, we report a 45\% improvement of the Bandersnatch
+curve, and a 42\% improvement over the Jubjub curve.
 
 \begin{table}[ht] %\small
   \centering
@@ -509,29 +489,15 @@ itself, and a 42\% improvement over the Jubjub curve.
   \label{tab:comp_full}
 \end{table}
 
-To have a meaningful comparison, we benchmark
+To make a meaningful comparison, we benchmark
 the cost of the group multiplication over the default generators.
 Note that Arkworks do not implement optimizations for 
 fixed generators nonetheless. We then sample field elements 
 uniformly at random, for each new iteration, and the benchmark
 result is consolidated over 100 iterations.
 
-We also implemented scalar multiplications with fixed bases, where
-window techniques reduce the overall cost using a precomputation
-table.
-A scalar multiplication with a window $w$ requires the
-precomputation of $2^w$ points, and then reduces the doubling steps by
-a factor $w$.
-Using the GLV method, two scalars are read in a row, and so using a
-window $w$, the precomputation table has $2^{2w}$ elements.
-In the context of a fixed precomputation table size, the window in the
-GLV method need to be halved and the gain of the GLV method does not
-compensate the factor $w$ improvement in the basic scalar multiplication.
-In short, Jubjub is as fast as Bandersnatch in the case of a fixed
-base point.
-
 \subsection{Multi scalar multiplications}
-We report the performance of variable base 
+This section reports the performance of variable base 
 multi scalar multiplications (MSM). Note that this MSM is 
 compatible, but
 different
@@ -544,33 +510,33 @@ we report the data point for:
   \item using GLV endomorphism to break the $k$ base scalars into $2k$
     new base scalars, of halved size, i.e.~of 128 bits.
 \end{itemize}
-The data are presented in Figure~\ref{fig:msm}. Specifically, 
+The data is presented in Figure~\ref{fig:msm}. Specifically, 
 as a baseline, the trivial solution, captained by 
 {\em GLV without 
 MSM}, is the product of the number of bases and the cost of
 doing a single GLV multiplication. 
 Note that the MSM algorithms incur an overhead to build some
 tables, which make them less favorable compared to the trivial
-solution when dimension is really small. For dimension greater 
+solution when dimension is really small. For a dimension greater 
 than 4, MSM algorithms begin to out-perform trivial solutions.
 For dimension greater than 128, it is more efficient to 
 invoke the MSM directly, rather than doing it over the GLV basis.
 The reason is that the size of the basis becomes too large, so
 that the gain we get from halving the scalars is offset from the
 gain we get from halving the basis. We remark that this threshold
-point is platform depended.
+point is platform dependent.
 \begin{figure}[h]\centering \label{fig:msm}
   \includegraphics[width=12cm]{fig/msm.pdf}
 \end{figure}
 
 \subsection{R1CS constraints}
-Bandersnatch curve is zk-SNARK friendly: its 
-base field matches the scalar field for BLS12-381 curve, a 
+The Bandersnatch curve is zk-SNARK friendly: its 
+base field matches the scalar field for the BLS12-381 curve, a 
 pairing-friendly curve, on top of which people build zk-SNARK
 systems, such as Groth16 \cite{EC:Groth16} or Plonk \cite{EPRINT:GabWilCio19}.
 In such a setting, the prover can sufficiently argue certain 
-relationship over some arithmetic circuit rather than binary
-circuit.
+relationships over arithmetic circuits rather than binary
+circuits.
 The circuit is expressed in a form of Rank-1 constraint system
 (R1CS), and in general, the complexity is determined by the 
 number of constraints in an R1CS. 
@@ -671,10 +637,9 @@ consumes another 10 constraints).
 
 \section{Conclusion}
 Tne last decade has seen great improvements on practical zk-SNARK systems.
-An essential stepping stone of these schemes is the efficient elliptic
-curve whose base field matches the scalar field for some pairing
-friendly curve.
-In this note, we present Bandersnatch as an alternative to the common used
+An essential stepping stone of these schemes is an efficient elliptic
+curve whose base field matches the scalar field for some pairing-friendly curve.
+On this note, we present Bandersnatch as an alternative to the commonly used
 base curve Jubjub. Due to the existence of an efficiently computable
 endomorphism, the scalar multiplication over this curve is 42\% times
 faster than the Jubjub curve.
