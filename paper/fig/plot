@@ -1,4 +1,4 @@
-set title "Multi-scalar-multiplications" font ",20"
+set title "Multi scalar multiplications" font ",20"
 set key left box
 set style data points
 set term postscript dashed color
@@ -9,7 +9,7 @@ set logscale y
 set grid
 
 plot     44*2**(x) w l lt 1 t "GLV without MSM", \
-    "msm.txt" w p pointtype 2 t "multi-scalar-mul", \
+    "msm.txt" w p pointtype 2 t "multi scalar mul", \
     "msm-glv.txt" w p pointtype 3 t "GLV with MSM"
 
 
