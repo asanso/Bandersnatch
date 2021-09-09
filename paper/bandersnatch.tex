@@ -51,11 +51,10 @@
  built over the BLS12-381 scalar field. The curve is equipped with an efficient
  endomorphism, allowing a fast scalar multiplication algorithm.
  Our benchmark shows that the multiplication is 42\% faster, 
- compared to another curve called Jubjub, having similar properties. Nonetheless,
- Bandersnatch to not provide any performance improvement for either 
- rank 1 constraint systems (R1CS) or multi-scalar-multiplications, compared to
- the Jubjub curve.
-
+ compared to another curve called Jubjub, having similar
+ properties. Nonetheless, Bandersnatch does not provide any
+ performance improvement for either rank 1 constraint systems (R1CS)
+ or multi-scalar-multiplications, compared to the Jubjub curve.
 \end{abstract}
 
 \section{Introduction}
@@ -439,13 +438,6 @@ has $126$ bits of security (resp. $122$ bits of security).
 
 \section{Comparison}\label{sec:comparison}
 
-% \SM{TODO benchmarks:}
-% \begin{itemize}
-% \item both with and without the endomorphism,
-% \item using windowing techniques,
-% \item with a fixed-time (side-channel-resistant) algorithm.
-% \end{itemize}
-
 %### Scalar multiplication improvement
 The twisted Edwards representation is mostly used in practice, and we
 now focus on the comparison between Jubjub and Bandersnatch in this
@@ -517,27 +509,26 @@ itself, and a 42\% improvement over the Jubjub curve.
   \label{tab:comp_full}
 \end{table}
 
-
-
 To have a meaningful comparison, we benchmark
-the cost of group multiplication over the default generators.
+the cost of the group multiplication over the default generators.
 Note that Arkworks do not implement optimizations for 
 fixed generators nonetheless. We then sample field elements 
 uniformly at random, for each new iteration, and the benchmark
 result is consolidated over 100 iterations.
 
-\subsection{Scalar multiplication for a fixed base point}
-\ZZ{I incline to remove this subsection completely}
-We also implemented scalar multiplications with fixed bases. 
-In short, for fixed base scalar multiplications, having an 
-endomorphism does not
-improve the overall performance. Nonetheless, it is worth
-pointing out that the endomorphism does improve the storage
-size by a factor of 2, for a fixed window size.
-
-%\SM{missing something to say about fixed base point SM}
-
-%\ZZ{WIP}
+We also implemented scalar multiplications with fixed bases, where
+window techniques reduce the overall cost using a precomputation
+table.
+A scalar multiplication with a window $w$ requires the
+precomputation of $2^w$ points, and then reduces the doubling steps by
+a factor $w$.
+Using the GLV method, two scalars are read in a row, and so using a
+window $w$, the precomputation table has $2^{2w}$ elements.
+In the context of a fixed precomputation table size, the window in the
+GLV method need to be halved and the gain of the GLV method does not
+compensate the factor $w$ improvement in the basic scalar multiplication.
+In short, Jubjub is as fast as Bandersnatch in the case of a fixed
+base point.
 
 \subsection{Multi-scalar-multiplications}
 We report the performance of variable base 
@@ -595,7 +586,7 @@ it takes 6 constraints per addition, 5 constraints
 per doubling and 2 constraints per bit selection. This adds
 up to 13 constraints per bit, or 3315 constraints per
 group multiplication (and we reasonably assume some system overhead
-consume another 10 constraints). 
+consumes another 10 constraints). 
 
 % Now, in the case of GLV,
 % % Let us first explain the obstacle of implementing the GLV
