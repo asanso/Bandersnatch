@@ -54,7 +54,7 @@
  compared to another curve called Jubjub, having similar
  properties. Nonetheless, Bandersnatch does not provide any
  performance improvement for either rank 1 constraint systems (R1CS)
- or multi-scalar-multiplications, compared to the Jubjub curve.
+ or multi scalar multiplications, compared to the Jubjub curve.
 \end{abstract}
 
 \section{Introduction}
@@ -476,7 +476,7 @@ multiplication methodology, without side channel protections such
 as Montgomery ladders. Our non-GLV implementation also follows
 this design. For our GLV implementation, there are three components,
 namely, the endomorphism, the scalar decomposition, and the
-multi-scalar-multiplication (MSM). We implement those schemes and 
+multi scalar multiplication (MSM). We implement those schemes and 
 present the micro-benchmarks in Table~\ref{tab:comp_full}.
 Specifically, we do not use the MSM implementation in Arkworks:
 our scalars, after the decomposition, contain roughly 128 bits
@@ -502,7 +502,7 @@ itself, and a 42\% improvement over the Jubjub curve.
     Bandersnatch with GLV& 44 us & 42 us \\\hline
     \ \ \ Endomorphism & 2.4 us& 1.8 us\\\hline
     \ \ \ Scalar decomposition & 0.75 us & 0.7 us \\\hline
-    \ \ \ multi-scalar-multiplication & 42 us &  40.8 us\\\hline\hline
+    \ \ \ multi scalar multiplication & 42 us &  40.8 us\\\hline\hline
     Overall Improvement & 42\% & 39\% \\\hline
   \end{tabular}
   \caption{Bandersnatch vs Jubjub: Performance}
@@ -530,9 +530,9 @@ compensate the factor $w$ improvement in the basic scalar multiplication.
 In short, Jubjub is as fast as Bandersnatch in the case of a fixed
 base point.
 
-\subsection{Multi-scalar-multiplications}
+\subsection{Multi scalar multiplications}
 We report the performance of variable base 
-multi-scalar-multiplications (MSM). Note that this MSM is 
+multi scalar multiplications (MSM). Note that this MSM is 
 compatible, but
 different
 from the MSM inside the GLV. 
@@ -656,7 +656,7 @@ consumes another 10 constraints).
 %       Bandersnatch without GLV& 3325 \\\hline\hline
 %     Endomorphism & 10 \\\hline
 %     Scalar decomposition &  \\\hline
-%     multi-scalar-multiplication & 2144 \\\hline
+%     multi scalar multiplication & 2144 \\\hline
 %     Bandersnatch with GLV&  \\\hline\hline
 %     Overall Improvement & \%   \\\hline
 %   \end{tabular}
@@ -677,7 +677,7 @@ matches the scalar  field for some pairing friendly curve.
 In this note, we present Bandersnatch as an alternative to the common used
 base curve, Jubjub. Due to the existence of GLV endomorphism, group 
 operation over our curve is 42\% times faster than that of Jubjub curve.
-For multi-scalar-multiplications, we report a narrowed advantage over Jubjub 
+For multi scalar multiplications, we report a narrowed advantage over Jubjub 
 curve when the dimension is small; and no advantage for medium to large dimensions.
 We also do not observe any improvement in terms of number of constraints in 
 the corresponding R1CS circuit.
