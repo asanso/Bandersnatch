@@ -670,14 +670,17 @@ consumes another 10 constraints).
 %than the Jubjub implementation.
 
 \section{Conclusion}
-Last decade has seen great improvement on practical zk-snark systems.
-One of an essential stepping stone is an efficient elliptic curve whose base field
-matches the scalar  field for some pairing friendly curve. 
+Tne last decade has seen great improvements on practical zk-SNARK systems.
+An essential stepping stone of these schemes is the efficient elliptic
+curve whose base field matches the scalar field for some pairing
+friendly curve.
 In this note, we present Bandersnatch as an alternative to the common used
-base curve, Jubjub. Due to the existence of GLV endomorphism, group 
-operation over our curve is 42\% times faster than that of Jubjub curve.
+base curve Jubjub. Due to the existence of an efficiently computable
+endomorphism, the scalar multiplication over this curve is 42\% times
+faster than the Jubjub curve.
 For multi scalar multiplications, we report a narrowed advantage over Jubjub 
-curve when the dimension is small; and no advantage for medium to large dimensions.
+curve when the dimension is small, but it vanishes for larger
+dimensions.
 We also do not observe any improvement in terms of number of constraints in 
 the corresponding R1CS circuit.
 
