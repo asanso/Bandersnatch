@@ -109,8 +109,8 @@ Details deferred to Section~\ref{sec:comparison}.
   
   \begin{tabular}{|l|c|c|}\hline
       & multiplication cost  \\\hline\hline
-    Jubjub & 75 us   \\\hline
-    Bandersnatch & 44 us   \\\hline\hline   
+    Jubjub & 75 $\mu$s   \\\hline
+    Bandersnatch & 44 $\mu$s   \\\hline\hline   
     Improvement & 42\% \\\hline
   \end{tabular}
   \caption{Bandersnatch vs Jubjub}
@@ -477,12 +477,12 @@ curve, and a 42\% improvement over the Jubjub curve.
   
   \begin{tabular}{|l|c|c|}\hline
       & \texttt{default} & \texttt{asm}\\\hline\hline
-    Jubjub & 75 us & 69 us \\\hline\hline
-    Bandersnatch without GLV & 78 us & 72 us  \\\hline\hline   
-    Bandersnatch with GLV& 44 us & 42 us \\\hline
-    \ \ \ Endomorphism & 2.4 us& 1.8 us\\\hline
-    \ \ \ Scalar decomposition & 0.75 us & 0.7 us \\\hline
-    \ \ \ multi scalar multiplication & 42 us &  40.8 us\\\hline\hline
+    Jubjub & 75 $\mu$s & 69 $\mu$s \\\hline\hline
+    Bandersnatch without GLV & 78 $\mu$s & 72 $\mu$s  \\\hline\hline   
+    Bandersnatch with GLV& 44 $\mu$s & 42 $\mu$s \\\hline
+    \ \ \ Endomorphism & 2.4 $\mu$s& 1.8 $\mu$s\\\hline
+    \ \ \ Scalar decomposition & 0.75 $\mu$s & 0.7 $\mu$s \\\hline
+    \ \ \ multi scalar multiplication & 42 $\mu$s &  40.8 $\mu$s\\\hline\hline
     Overall Improvement & 42\% & 39\% \\\hline
   \end{tabular}
   \caption{Bandersnatch vs Jubjub: Performance}
