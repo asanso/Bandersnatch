@@ -77,6 +77,16 @@ R = P.psi()
 assert R.on_curve()
 assert R.psi() == P.double().neg()
 
+# psi is homogeneous
+P = C.random_point()
+lambda_P = P
+lambda_P.x *= 12
+lambda_P.y *= 12
+lambda_P.z *= 12
+R = P.psi()
+lambda_R = lambda_P.psi()
+assert lambda_R.normalize() == R.normalize()
+
 # L value
 P_r = C.point_of_order_r()
 assert P_r.psi() == P_r.scalar_mul(C.L)
