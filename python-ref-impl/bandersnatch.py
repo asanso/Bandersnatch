@@ -11,7 +11,7 @@ class Bandersnatch(Curve):
     def __init__(self,
                  p, a, d,
                  L, r, cofactor,
-                 a1,a2, b1,b2, c1):
+                 a1,a2, b1, c1):
         super().__init__(p, a, d, r, cofactor)
         self.D = -8
         self.L = L
@@ -23,7 +23,6 @@ class Bandersnatch(Curve):
         self.a1 = a1
         self.a2 = a2
         self.b1 = b1
-        self.b2 = b2
         self.c1 = c1
 
     def random_point(self):
@@ -53,14 +52,15 @@ class BandersnatchPoint(Point):
         a1 = self.curve.a1
         a2 = self.curve.a2
         b1 = self.curve.b1
-        b2 = self.curve.b2
         c1 = self.curve.c1
         z2 = z**2
         y2 = y**2
+        z2y = z2*y
         fy = a1*y2+a2*z2
-        gy = b1*y2+b2*z2
-        hy = y2+c1*z2
-        return BandersnatchPoint(x*fy*hy, gy*z2y, hy*z2*y, self.curve)
+        c1z2 = c1*z2
+        hy = y2+c1z2
+        gy = b1*y2+2*c1z2+z2
+        return BandersnatchPoint(x*fy*hy, gy*z2y, hy*z2y, self.curve)
 
     def fast_scalar_mul(self, n):
         psiP = self.psi()
