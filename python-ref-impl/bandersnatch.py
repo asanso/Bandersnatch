@@ -11,7 +11,7 @@ class Bandersnatch(Curve):
     def __init__(self,
                  p, a, d,
                  L, r, cofactor,
-                 a1,a2, b1, c1):
+                 b,c):
         super().__init__(p, a, d, r, cofactor)
         self.D = -8
         self.L = L
@@ -20,11 +20,9 @@ class Bandersnatch(Curve):
         M = Matrix([[-L,1], [r,0]])
         self.N = M.LLL()
         self.N_inv = self.N**-1
-        self.a1 = a1
-        self.a2 = a2
-        self.b1 = b1
-        self.c1 = c1
-
+        self.b = b
+        self.c = c
+        
     def random_point(self):
         P = super().random_point()
         return BandersnatchPoint(P.x, P.y, P.z, self)
@@ -48,20 +46,19 @@ class BandersnatchPoint(Point):
         super().__init__(x, y, z, curve)
         
     def psi(self):
+        # computed in 9 multiplications and 3 additions.
         x,y,z = self.x, self.y, self.z
-        a1 = self.curve.a1
-        a2 = self.curve.a2
-        b1 = self.curve.b1
-        c1 = self.curve.c1
-        z2 = z**2
+        b = self.curve.b
+        c = self.curve.c
+        xy = x*y
         y2 = y**2
-        z2y = z2*y
-        fy = a1*y2+a2*z2
-        c1z2 = c1*z2
-        hy = y2+c1z2
-        gy = b1*y2+2*c1z2+z2
-        return BandersnatchPoint(x*fy*hy, gy*z2y, hy*z2y, self.curve)
-
+        z2 = z**2
+        bz2 = b*z2
+        fy = c * (z2-y2)
+        gy = b * (y2 + bz2)
+        hy = y2 - bz2
+        return BandersnatchPoint(fy*hy, gy*xy, hy * xy, self.curve)
+    
     def fast_scalar_mul(self, n):
         psiP = self.psi()
         beta = vector([n,0]) * self.curve.N_inv

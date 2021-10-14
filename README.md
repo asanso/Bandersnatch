@@ -59,10 +59,10 @@ psi_M(x,z) = ( -(x-z)**2 - c * x * z , 2 * x * z )
 * In projective Twisted Edwards coordinates.<br>
 The file `python-ref-impl/params-TE.py` includes the parameters of the curve in the
 form `a*x**2 + y**2 = 1 + d * x**2 * y**2`, and the endomorphism
-coefficients `a1,a2,a3,b1,b2,b3,c1,c2` such that
+coefficients `b,c` such that
 ```python3
-psi_TE(x,y,z) = ( x * a1 * (y+a2*z) * (y+a3*z) * (y+c1*z) * (y+c2*z) ,
-b1 * (y+b2*z) * (y+b3*z) * z**2 * y , (y+c1*z) * (y+c2*z) * z**2 * y )
+psi_TE(x,y,z) = ( c(z**2-y**2)(y**2-bz**2), b(y**2+bz**2)*x*y,
+(y**2-bz**2)*x*y )
 ```
 
 ## Comparison with Jubjub

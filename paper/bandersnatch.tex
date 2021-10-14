@@ -352,21 +352,19 @@ Section~\ref{sec:comparison} for details.
 From this representation, we exhibit the degree $2$ endomorphism in
 twisted Edwards coordinates:
 $$
-\psi_\text{TE}(x,y,z) = \left(xf(y)h(y), g(y)yz^2, h(y)yz^2\right)\qquad
+\psi_\text{TE}(x,y,z) = \left(f(y)h(y), g(y)xy, h(y)xy\right)\qquad
 \left\{\begin{array}{r}
-f(y) = a_1y^2+a_2z^2,\\
-g(y) = b_1y^2+(2c_1+1)z^2,\\
-h(y) = y^2+c_1z^2.
+f(y) = c(z^2-y^2),\\
+g(y) = b(y^2+bz^2),\\
+h(y) = y^2-bz^2.
 \end{array}\right.$$
 
 \begin{verbatim}
-a1=0x23c58c92306dbb95960f739827ac195334fcd8fa17df036c692f7ddaa306c7d4
-a2=0x23c58c92306dbb96b0b30d3513b222f50d02d8ff03e5036c69317ddaa306c7d4
-b1=0x52c9f28b828426a561f00d3a63511a882ea712770d9af4d6ee0f014d172510b4
-c1=0x2123b4c7a71956a2d149cacda650bd7d2516918bf263672811f0feb1e8daef4d.
+b=0x52c9f28b828426a561f00d3a63511a882ea712770d9af4d6ee0f014d172510b4
+c=0x6cc624cf865457c3a97c6efd6c17d1078456abcfff36f4e9515c806cdf650b3d.
 \end{verbatim}
-This map can be computed in 3 additions and 11 multiplications by
-first computing $y^2$, $z^2$ and $yz^2$.
+This map can be computed in 3 additions and 9 multiplications by
+first computing $xy$, $y^2$, $z^2$ and $bz^2$.
 
 \paragraph{Subgroup generator.}
 The generator of the $p_{253}$-order subgroup obtained in
