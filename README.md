@@ -61,8 +61,7 @@ The file `python-ref-impl/params-TE.py` includes the parameters of the curve in 
 form `a*x**2 + y**2 = 1 + d * x**2 * y**2`, and the endomorphism
 coefficients `b,c` such that
 ```python3
-psi_TE(x,y,z) = ( c(z**2-y**2)(y**2-bz**2), b(y**2+bz**2)*x*y,
-(y**2-bz**2)*x*y )
+psi_TE(x,y,z) = ( c(z**2-y**2)(y**2-bz**2), b(y**2+bz**2)*x*y, (y**2-bz**2)*x*y )
 ```
 
 ## Comparison with Jubjub
