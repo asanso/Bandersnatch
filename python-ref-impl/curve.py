@@ -134,13 +134,14 @@ class Point():
         return R
 
     def multi_scalar_mul(self, k1, other, k2):
+        P = self
         if k1<0:
             k1=-k1
             P = P.neg()
         if k2<0:
             k2=-k2
             other = other.neg()
-        selfPlusOther = self.add(other)
+        PplusOther = P.add(other)
         bits_k1 = ZZ(k1).bits()
         bits_k2 = ZZ(k2).bits()
         while len(bits_k1) < len(bits_k2):
@@ -155,7 +156,7 @@ class Point():
             if bits_k1[i] == 0 and bits_k2[i] == 1:
                 R = R.add(other)
             if bits_k1[i] == 1 and bits_k2[i] == 1:
-                R = R.add(selfPlusOther)
+                R = R.add(PplusOther)
         return R
 
     def clear_cofactor(self):
