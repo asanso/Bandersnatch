@@ -30,7 +30,8 @@ alpha = E.division_polynomial(2).roots()[0][0]
 P = E.lift_x(alpha)
 phi0,phi1 = E.isogeny(P)
 E2 = E.isogeny_codomain(P)
-u = list(set((X**4 - E.a4()/E2.a4()).roots()) & set((X**6 - E.a6()/E2.a6()).roots()))[0][0]
+# choice of u leads to psi or -psi
+u = list(set((X**4 - E.a4()/E2.a4()).roots()) & set((X**6 - E.a6()/E2.a6()).roots()))[1][0]
 assert u**4 == E.a4()/E2.a4()
 assert u**6 == E.a6()/E2.a6()
 u2 = u**2
@@ -62,6 +63,12 @@ assert not(G.is_zero()) and (r*G).is_zero()
 xG_W = G[0]
 yG_W = G[1]
 assert G[2] == 1
+
+#######
+# check
+psiG = E(u2*(xG_W**2 + 44800*xG_W + 2257920000)/(xG_W + 44800),u3*yG_W*(xG_W**2+2*44800*xG_W + t0)/(xG_W+44800)**2)
+assert psiG == int(L)*G
+#######
 
 f = open('./' + os.path.dirname(__file__) +'/params-W.py', 'w')
 f.write('import sage.all\n')
