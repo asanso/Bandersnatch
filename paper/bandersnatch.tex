@@ -48,10 +48,12 @@
  built over the BLS12-381 scalar field. The curve is equipped with an efficient
  endomorphism, allowing a fast scalar multiplication algorithm.
  Our benchmark shows that the multiplication is 42\% faster, 
+ and 21\% reduction in terms of circuit size in the 
+ form of rank 1 constraint systems (R1CS),
  compared to another curve, called Jubjub, having similar
  properties. Nonetheless, Bandersnatch does not provide any
- performance improvement for either rank 1 constraint systems (R1CS)
- or multi scalar multiplications, compared to the Jubjub curve.
+ performance improvement for multi scalar multiplications, 
+ compared to the Jubjub curve.
 \end{abstract}
 
 \section{Introduction}
@@ -108,10 +110,10 @@ Details deferred to Section~\ref{sec:comparison}.
   \centering
   
   \begin{tabular}{|l|c|c|}\hline
-      & multiplication cost  \\\hline\hline
-    Jubjub & 75 $\mu$s   \\\hline
-    Bandersnatch & 44 $\mu$s   \\\hline\hline   
-    Improvement & 42\% \\\hline
+      & multiplication cost & R1CS constraints  \\\hline\hline
+    Jubjub & 75 $\mu$s  & 3177 \\\hline
+    Bandersnatch & 44 $\mu$s  & 2621 \\\hline\hline   
+    Improvement & 42\% & 21\%\\\hline
   \end{tabular}
   \caption{Bandersnatch vs Jubjub}
   \label{tab:comp}
@@ -125,15 +127,16 @@ in the form of rank one constraint system (R1CS),
 a common approach for expressing circuits for zero-knowledge 
 proof systems. 
 A group multiplication takes 
-3325
+2621
 constraints when the point is in affine form over the 
-twisted Edwards curve.
+twisted Edwards curve,
 %, and 
 %2361
 %constraints when the point is in the projective form
 %over the short Weierstrass from.
 %Both figures 
-This matches what we have for Jubjub curve.
+% This matches what we have for Jubjub curve.
+yielding a 21\% improvement over the Jubjub curve.
 
 \paragraph{Organization of the paper.}
 In Section~\ref{sec:small-disc-curves}, we describe how we obtained
@@ -545,96 +548,60 @@ number of constraints in an R1CS.
 We evaluate the number of constraints for a 
 variable base group multiplication. For a double-and-add
 algorithm, 
-our code reports 3325 constraints in 
+our code reports 3177 constraints in 
 total.
 As a sanity check, within the core logic,
 it takes 6 constraints per addition, 5 constraints
 per doubling and 2 constraints per bit selection. This adds
-up to 13 constraints per bit, or 3315 constraints per
+up to 13 constraints per bit, or 3177 constraints per
 group multiplication (and we reasonably assume some system overhead
 consumes another 10 constraints). 
 
-% Now, in the case of GLV,
-% % Let us first explain the obstacle of implementing the GLV
-% %with R1CS. T
-% the endomorphism is almost free: it requires 
-% 10 constraints. The MSM inside the GLV can also be done 
-% with some $2200$ constraints using the above  double-then-add
-% techniques.
-% The difficult part is the circuit for scalar decomposition,
-% which is to prove $n = n_1 +\lambda n_2 \bmod r$ where
-% $n$ and $\lambda$ are around 256 bits,
-% $n_1$ and $n_2$ are around 128 bits, and
-% $r$
-% is the order of the scalar field.
-% It was estimated that this would add another $300$ constraints
-% with hand optimization \cite{daira_telegram}. 
-
-%On the other hand, we can indeed perform a group operation
-%over short Weierstrass form with 2361 constraints.
-% (TBD: need to check with Arkworks people on this)
-
+Now, in the case of GLV,
+% Let us first explain the obstacle of implementing the GLV
+%with R1CS. T
+the endomorphism is almost free: it requires 
+6 constraints. The MSM inside the GLV can also be done 
+with $2176$ constraints using the above double-then-add
+techniques.
+The difficult part is the circuit for scalar decomposition,
+which is to prove $n = n_1 +\lambda n_2 \bmod r$ where
+$n$ and $\lambda$ are around 256 bits,
+$n_1$ and $n_2$ are around 128 bits, and
+$r$
+is the order of the scalar field.
+We implemented this part of the code with $405$ constraints
+via hand optimized circuits.
 % We therefore report the number of constraints to perform
 % a group operation on both Jubjub curve and Bandersnatch 
-% curve. We observe that it takes 3325 constraints for the 
+% curve. We observe that it takes 3177 constraints for the 
 % Jubjub curve, for which the statement is argued over 
 % the Edwards affine form coordinates. 
-% It also takes a same number of constraints
-% for Bandersnatch when its coordinates are in this form. 
-% However, the Bandersnatch curve also supports a 
-% short Weierstrass form, for which we can argue the 
-% relationship over the projective coordinates.
-% This effectively reduces the number of constraints to
-% 2361, or a 39\% improvement, as shown in Table~\ref{tab:comp}.
-% Note that Jubjub also has a Weierstrass form, but it is 
-% not as useful. 
+Precisely, we list the breakdown numbers in Table~\ref{tab:r1cs_full};
+the  Bandersnatch with GLV constraints count is a little higher than
+the sum of its components due to some overhead during setup phase.
+
+\begin{table}[h] %\small
+  \centering
   
-% We also want to remark the obstacle of expressing the 
-% GLV algorithm in terms of R1CS circuit. We observe a cost of 10 
-% constraints for computing the endomorphism, and a cost of 2144 
-% constraints for multiple scalar multiplications where the 
-% scalars are already decomposed. The cost of those two subroutines
-%  is already close
-% to the cost of a non-GLV circuit over the projective 
-% coordinates. In addition to that, the biggest cost that 
-% GLV incurs is to argue the correctness of the scalar 
-% decomposition, i.e.~for a scalar $s$, we need to argue 
-% that $s = k_1 + k_2 \lambda$ over the scalar field of the
-% Bandersnatch curve, 
-% for some fixed $\lambda$. To date, we do not have an 
-% efficient way for such a proof. The best methods known to us are
-% either to argue this relationship bit by bit which incurs a
-% prohibitive cost, or to 
-% embed the scalars into group elements and argue the relationship
-% over the group elements, whose cost will far exceed a 
-% single group operation.
+  \begin{tabular}{|l|c|}\hline
+      & \texttt{Number of Constraints} \\\hline\hline
+      jubjub& 3177 \\\hline
+      Bandersnatch without GLV& 3177 \\\hline\hline
+    Endomorphism & 6 \\\hline
+    Scalar decomposition &  405 \\\hline
+    multi scalar multiplication & 2176 \\\hline
+    Bandersnatch with GLV&  2621\\\hline\hline
+    Overall Improvement & 21\%   \\\hline
+  \end{tabular}
+  \caption{Bandersnatch vs Jubjub: R1CS}
+  \label{tab:r1cs_full}
+\end{table}
 
 
-% When GLV is enabled, this will be reduced to 1468.
-% Precisely, we list the breakdown numbers in Table~\ref{tab:r1cs_full};
-
-% \begin{table}[h] %\small
-%   \centering
-  
-%   \begin{tabular}{|l|c|}\hline
-%       & \texttt{default} \\\hline\hline
-%       jubjub& 3325 \\\hline
-%       Bandersnatch without GLV& 3325 \\\hline\hline
-%     Endomorphism & 10 \\\hline
-%     Scalar decomposition &  \\\hline
-%     multi scalar multiplication & 2144 \\\hline
-%     Bandersnatch with GLV&  \\\hline\hline
-%     Overall Improvement & \%   \\\hline
-%   \end{tabular}
-%   \caption{Bandersnatch vs Jubjub: R1CS}
-%   \label{tab:r1cs_full}
-% \end{table}
-
-
-
-%The \href{https://github.com/zhenfeizhang/bandersnatch-glv}{Rust implementation} of the Bandersnatch scalar multiplication
-%algorithm confirms our estimations: the GLV method is $40\%$ faster
-%than the Jubjub implementation.
+The \href{https://github.com/zhenfeizhang/bandersnatch-glv}{Rust implementation} of the Bandersnatch scalar multiplication
+algorithm confirms our estimations: the GLV method is $21\%$ faster
+than the Jubjub implementation.
 
 \section{Conclusion}
 Tne last decade has seen great improvements on practical zk-SNARK systems.
