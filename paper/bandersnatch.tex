@@ -22,6 +22,7 @@
 \usepackage{listings}% http://ctan.org/pkg/listings
 \lstset{
   basicstyle=\ttfamily,
+  mathescape
 }
 
 \theoremstyle{definition}
@@ -42,24 +43,25 @@
 
 % \medskip
 \begin{abstract}
- In this short note, we introduce Bandersnatch, a new elliptic curve
+ In this paper, we introduce Bandersnatch, a new elliptic curve
  built over the BLS12-381 scalar field. The curve is equipped with an efficient
  endomorphism, allowing a fast scalar multiplication algorithm.
  Our benchmark shows that the multiplication is 42\% faster, 
- and 21\% reduction in terms of circuit size in the 
- form of rank 1 constraint systems (R1CS),
+ 21\% reduction in terms of circuit size in the 
+ form of rank 1 constraint systems (R1CS), 
+ and 10\% reduction in terms of plonk circuit,
  compared to another curve, called Jubjub, having similar
- properties. Nonetheless, Bandersnatch does not provide any
- performance improvement for multi scalar multiplications, 
- compared to the Jubjub curve.
+ properties. Many zero-knowledge proof systems that rely on
+ the Jubjub curve can benefit
+ from our result.
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}
 %BLS12-381
-BLS12-381 is a pairing-friendly curve created by Sean
-Bowe~\href{https://electriccoin.co/blog/new-snark-curve/}{here} in 2017.
+BLS12-381 is a pairing-friendly curve discovered by Sean
+Bowe \cite{bls12381} in 2017.
 Currently, BLS12-381 is undergoing a standardization process 
 from the
 IRTF Crypto Forum Research Group, and is
@@ -69,7 +71,7 @@ blockchain universe: Zcash, Ethereum 2.0, \href{https://anoma.network}{Anoma}, S
 Chia, and more.
 %jubjub
 The ZCash team
-introduced Jubjub~\href{https://z.cash/technology/jubjub/}{here}, an
+introduced Jubjub \cite{jubjub}, an
 elliptic curve built over the BLS12-381 scalar field $\mathbb
 F_{r_\text{BLS}}$.
 This curve is not pairing-friendly, but leads to constructions where
@@ -100,35 +102,38 @@ method~\cite{MC:AtkMor93}, where the scalar multiplication algorithm
 is efficient thanks to the GLV method~\cite{C:GalLamVan01}.
 
 We implement this curve in Rust, using
-the~\href{http://arkworks.rs}{Arkworks framework}, and release our
+the {Arkworks framework} \cite{arkworks}, and release our
 code to the open domain~\cite{bandersnatch-rust}.
 Table~\ref{tab:comp} shows a comparison of Bandersnatch curve
 and Jubjub curve. 
 Details deferred to Section~\ref{sec:comparison}.
 
-\begin{table}[ht] %\small
+\begin{table*}[ht] %\small
   \centering
   
-  \begin{tabular}{|l|c|c|}\hline
-      & multiplication cost & R1CS constraints  \\\hline\hline
-    Jubjub & 75 $\mu$s  & 3177 \\\hline
-    Bandersnatch & 44 $\mu$s  & 2621 \\\hline\hline   
-    Improvement & 42\% & 21\%\\\hline
+  \begin{tabular}{|l|c|c|c|}\hline
+      & multiplication cost & R1CS constraints & TurboPlonk constraints  \\\hline\hline
+    Jubjub & 75 $\mu$s  & 3177 &  1865\\\hline
+    Bandersnatch & 44 $\mu$s  & 2621 & 1669\\\hline\hline   
+    Improvement & 42\% & 21\% & 10\%\\\hline
   \end{tabular}
   \caption{Bandersnatch vs Jubjub}
   \label{tab:comp}
-\end{table}
+\end{table*}
 
-We also report the number of 
+To demonstrate how a zero-knowledge proof system can benefit
+form our curve, we also report the number of 
 % , in terms of both group multiplications and 
 % the number of 
 constraints one needs to express a group multiplication
-in the form of rank one constraint system (R1CS), 
-a common approach for expressing circuits for zero-knowledge 
-proof systems. 
+in the forms of 
+two commonly used circuit descriptions for zero-knowledge 
+proof systems, namely,
+rank one constraint system (R1CS), 
+and the plonk circuit.
 A group multiplication takes 
-2621
-constraints when the point is in affine form over the 
+2621 and 1669
+constraints, respectively, when the point is in affine form over the 
 twisted Edwards curve,
 %, and 
 %2361
@@ -136,7 +141,7 @@ twisted Edwards curve,
 %over the short Weierstrass from.
 %Both figures 
 % This matches what we have for Jubjub curve.
-yielding a 21\% improvement over the Jubjub curve.
+yielding a 21\% and 10\% improvement over the Jubjub curve.
 
 \paragraph{Organization of the paper.}
 In Section~\ref{sec:small-disc-curves}, we describe how we obtained
@@ -219,7 +224,7 @@ models, together with the endomorphism in order to apply the GLV
 scalar multiplication algorithm.
 
 \begin{table*}[!ht]
-    \centering\footnotesize
+    \centering%\footnotesize
     \begin{tabularx}{\textwidth}{ccl}
         \toprule                            
         $\mathbf{-D}$    & \textbf{Curve sec.}  & \textbf{Curve order} \\
@@ -294,13 +299,15 @@ formulas~\cite{velu71} let us obtain compute $\psi$.
 For cryptographic use-cases, we are interested in computing $\psi$ on
 the $p_{253}$-order subgroup of the curve. On these points, $\psi$
 acts as a scalar multiplication by the eigenvalue
-\begin{lstlisting}
-  $\lambda$ = 0x13b4f3dc4a39a493edf849562b38c72b
-                cfc49db970a5056ed13d21408783df05
-\end{lstlisting}
-
-$$\lambda = \text{\small{\tt
-    0x13b4f3dc4a39a493edf849562b38c72bcfc49db970a5056ed13d21408783df05}}.$$
+% \begin{lstlisting}
+%   $\lambda$ = 0x13b4f3dc4a39a493edf849562b38c72b
+%                 cfc49db970a5056ed13d21408783df05
+% \end{lstlisting}
+\begin{align*}
+  \lambda = \text{\small{\tt
+    0x13b4f3dc4a39a493edf849562b38c72b}}&\\
+    \text{\small{\tt  cfc49db970a5056ed13d21408783df05}}&
+\end{align*}
 By construction, $\psi$ is the endomorphism $\sqrt{-2}\in \mathcal
 O_{-8}$. Thus, $\lambda$ satisfies
 $\lambda^2+2 = 0 \bmod p_{253}$.
@@ -325,8 +332,12 @@ $$E_W:y^2 = x^3 -3763200000x -78675968000000.$$
 \paragraph{Endomorphism.}
 The endomorphism $\psi$ can obtained using the method detailed above.
 We obtain the following expression:
-$$\psi_\text{W}(x,y) = \left(u^2\cdot \frac{x^2+44800x+2257920000}{x+44800}, u^3\cdot
-y\cdot \frac{x^2+2\cdot 44800x+t_0}{(x+44800)^2}\right).$$
+\begin{align*}
+  \psi_\text{W}&(x,y) = \\
+  &\left(u^2\cdot \frac{x^2+44800x+2257920000}{x+44800}, u^3\cdot
+y\cdot \frac{x^2+2\cdot 44800x+t_0}{(x+44800)^2}\right),
+\end{align*}
+where
 \begin{verbatim}
         u  = 0x50281ac0f92fc1b20fd897a16bf2b9e1
                32bdcb06721c589296cf82245cf9382d,
@@ -346,8 +357,11 @@ the point at infinity. From a point with $x=2$, we obtain a generator $E_W(x_W,y
 Bandersnatch can also be represented in twisted Edwards coordinates,
 where the group law is complete.
 In this model, the Bandersnatch curve can be defined by the equation
-$$E_\text{TE}:-5x^2+y^2 = 1 +
-dx^2y^2, d=\frac{138827208126141220649022263972958607803}{171449701953573178309673572579671231137}.$$
+\begin{align*}
+&E_\text{TE}:-5x^2+y^2 = 1 + dx^2y^2, \\
+&d=\frac{138827208126141220649022263972958607803}{171449701953573178309673572579671231137}.
+\end{align*}
+
 Twisted Edwards group law is more efficient with a coefficient
 $a = -1$ (see~\cite{AC:HWCD08} for details).
 In our case, $-5$ is not a square in $\Fp$. Thus, the curve with
@@ -362,16 +376,19 @@ Section~\ref{sec:comparison} for details.
 From this representation, we exhibit the degree $2$ endomorphism in
 twisted Edwards coordinates:
 $$
-\psi_\text{TE}(x,y,z) = \left(f(y)h(y), g(y)xy, h(y)xy\right)\qquad
-\left\{\begin{array}{r}
-f(y) = c(z^2-y^2),\\
-g(y) = b(y^2+bz^2),\\
-h(y) = y^2-bz^2.
-\end{array}\right.$$
-
+\psi_\text{TE}(x,y,z) = \left(f(y)h(y), g(y)xy, h(y)xy\right)$$
+with
+\begin{align*}
+  f(y) &= c(z^2-y^2),\\
+  g(y) &= b(y^2+bz^2),\\
+  h(y) &= y^2-bz^2,
+\end{align*}
+and
 \begin{verbatim}
-b=0x52c9f28b828426a561f00d3a63511a882ea712770d9af4d6ee0f014d172510b4
-c=0x6cc624cf865457c3a97c6efd6c17d1078456abcfff36f4e9515c806cdf650b3d.
+        b = 0x52c9f28b828426a561f00d3a63511a88
+              2ea712770d9af4d6ee0f014d172510b4,
+        c = 0x6cc624cf865457c3a97c6efd6c17d107
+              8456abcfff36f4e9515c806cdf650b3d.
 \end{verbatim}
 This map can be computed in 3 additions and 9 multiplications by
 first computing $xy$, $y^2$, $z^2$ and $bz^2$.
@@ -393,8 +410,10 @@ provide here the Montgomery version because the scalar multiplication
 is more efficient in this model:
 $$E_M: By^2 = x^3 + Ax^2 + x$$
 \begin{verbatim}
-B=0x300c3385d13bedb7c9e229e185c4ce8b1dd3b71366bb97c30855c0aa41d62727
-A=0x4247698f4e32ad45a293959b4ca17afa4a2d2317e4c6ce5023e1fd63d1b5de98.
+        B = 0x300c3385d13bedb7c9e229e185c4ce8b
+              1dd3b71366bb97c30855c0aa41d62727,
+        A = 0x4247698f4e32ad45a293959b4ca17afa
+              4a2d2317e4c6ce5023e1fd63d1b5de98.
 \end{verbatim}
 
 \paragraph{Endomorphism.}
@@ -402,8 +421,10 @@ Montgomery curves allow efficient scalar multiplication using the
 Montgomery ladder. We provide here the endomorphism $\psi$ in this
 model:
 $$\psi_\text{M}(x,-,z) = (-(x-z)^2 - cxz, -, 2xz)$$
+with
 \begin{verbatim}
-c=0x4247698f4e32ad45a293959b4ca17afa4a2d2317e4c6ce5023e1fd63d1b5de9a.
+        c = 0x4247698f4e32ad45a293959b4ca17afa
+              4a2d2317e4c6ce5023e1fd63d1b5de9a.
 \end{verbatim}
 
 \paragraph{Subgroup generator.}
@@ -536,11 +557,11 @@ The reason is that the size of the basis becomes too large, so
 that the gain we get from halving the scalars is offset from the
 gain we get from halving the basis. We remark that this threshold
 point is platform dependent.
-\begin{figure}[h]\centering \label{fig:msm}
+\begin{figure*}[h]\label{fig:msm}\centering 
   \includegraphics[width=12cm]{fig/msm.pdf}
-\end{figure}
+\end{figure*}
 
-\subsection{R1CS constraints}
+\subsection{SNARK constraints}
 The Bandersnatch curve is zk-SNARK friendly: its 
 base field matches the scalar field for the BLS12-381 curve, a 
 pairing-friendly curve, on top of which people build zk-SNARK
@@ -548,10 +569,58 @@ systems, such as Groth16 \cite{EC:Groth16} or Plonk \cite{EPRINT:GabWilCio19}.
 In such a setting, the prover can sufficiently argue certain 
 relationships over arithmetic circuits rather than binary
 circuits.
-The circuit is expressed in a form of Rank-1 constraint system
-(R1CS), and in general, the complexity is determined by the 
-number of constraints in an R1CS. 
 
+There are two common ways to express operations in SNARK-friendly circuits, namely
+\begin{itemize}
+  \item Rank-1 constraint system
+  (R1CS)
+  \item Plonk circuit.
+\end{itemize}
+% The circuit is expressed in a form of Rank-1 constraint system
+% (R1CS), and i
+In general, the complexity is determined by the 
+number of constraints for both cases.
+The R1CS is universal, in that it is compatible with multiple 
+prover front-end. The plonk circuit is usually bounded to a specific
+plonk proving system, since Plonk prove system allows for customized
+selectors, and thus, customized circuits descriptions. For plonk
+circuit,
+our analysis is based on an ECC optimized plonk system, with 
+efficient range proofs from dynamic lookup tables \cite{EPRINT:GabWil20}.
+
+
+% We therefore report the number of constraints to perform
+% a group operation on both Jubjub curve and Bandersnatch 
+% curve. We observe that it takes 3177 constraints for the 
+% Jubjub curve, for which the statement is argued over 
+% the Edwards affine form coordinates. 
+Precisely, we list the breakdown numbers in Table~\ref{tab:r1cs_full};
+the  Bandersnatch with GLV constraints count is a little higher than
+the sum of its components due to some overhead during setup phase.
+
+\begin{table*}[h] %\small
+  \centering  
+  \begin{tabular}{|l|c|c|}\hline
+    & \texttt{R1CS Constraints}     & \texttt{Plonk Constraints}\\\hline\hline
+    jubjub& 3177 & 1865\\\hline
+    Bandersnatch without GLV& 3177 & 1865\\\hline\hline
+
+    Bandersnatch with GLV&  2621&1669\\\hline\hline
+    \quad Endomorphism & 6 & 7 \\\hline
+    \quad Scalar decomposition &  405 & 375\\\hline
+    \quad multi scalar multiplication & 2176& 1285 \\\hline
+    Overall Improvement & 21\%  & 10\% \\\hline
+  \end{tabular}
+  \caption{Bandersnatch vs Jubjub: Constraints count}
+  \label{tab:r1cs_full}
+\end{table*}
+
+
+The \href{https://github.com/zhenfeizhang/bandersnatch}{Rust implementation} of the Bandersnatch scalar multiplication
+algorithm confirms our estimations: the circuit for GLV method is $21\%$ smaller
+than the Jubjub implementation with R1CS, and $10\%$ smaller with Plonk.
+
+\subsubsection{R1CS}
 We evaluate the number of constraints for a 
 variable base group multiplication. For a double-and-add
 algorithm, 
@@ -579,36 +648,21 @@ $r$
 is the order of the scalar field.
 We implemented this part of the code with $405$ constraints
 via hand optimized circuits.
-% We therefore report the number of constraints to perform
-% a group operation on both Jubjub curve and Bandersnatch 
-% curve. We observe that it takes 3177 constraints for the 
-% Jubjub curve, for which the statement is argued over 
-% the Edwards affine form coordinates. 
-Precisely, we list the breakdown numbers in Table~\ref{tab:r1cs_full};
-the  Bandersnatch with GLV constraints count is a little higher than
-the sum of its components due to some overhead during setup phase.
 
-\begin{table}[h] %\small
-  \centering
-  
-  \begin{tabular}{|l|c|}\hline
-      & \texttt{Number of Constraints} \\\hline\hline
-      jubjub& 3177 \\\hline
-      Bandersnatch without GLV& 3177 \\\hline\hline
-    Endomorphism & 6 \\\hline
-    Scalar decomposition &  405 \\\hline
-    multi scalar multiplication & 2176 \\\hline
-    Bandersnatch with GLV&  2621\\\hline\hline
-    Overall Improvement & 21\%   \\\hline
-  \end{tabular}
-  \caption{Bandersnatch vs Jubjub: R1CS}
-  \label{tab:r1cs_full}
-\end{table}
+\subsubsection{Plonk}
+We apply a similar analysis for our customized, ECC-friendly 
+plonk system. In a double-and-add circuit, each bit in the scalar
+takes 7 constraints in total, i.e., 2 for point selection, 2 
+for addition, 2 for doubling, and 1 for binary decomposition.
+For a scalar length of 256 bits, this is roughly $1800$ constraints.
+
+In comparison, with GLV, per bit we account for 4 constraints for 2x point selections,
+4 constraints for 2x point additions, and 2 constraints for doubling.
+There is also a bit decomposition cost which was done during scalar
+decomposition. The gain comes from the fact that our scalars are only
+128 bits each.
 
 
-The \href{https://github.com/zhenfeizhang/bandersnatch-glv}{Rust implementation} of the Bandersnatch scalar multiplication
-algorithm confirms our estimations: the GLV method is $21\%$ faster
-than the Jubjub implementation.
 
 \section{Conclusion}
 Tne last decade has seen great improvements on practical zk-SNARK systems.
@@ -625,10 +679,10 @@ We also do not observe any improvement in terms of number of constraints in
 the corresponding R1CS circuit.
 
 
-\bigskip
-\paragraph*{\textbf{Acknowledgments.}} We would like to thank Weikeng
-Chen, Luca De Feo, Justin Drake, Youssef El Housni, Dankrad Feist,
-Gottfried Herold and Daira Hopwood for fruitful discussions. 
+% \bigskip
+% \paragraph*{\textbf{Acknowledgments.}} We would like to thank Weikeng
+% Chen, Luca De Feo, Justin Drake, Youssef El Housni, Dankrad Feist,
+% Gottfried Herold and Daira Hopwood for fruitful discussions. 
 
 \bibliography{bandersnatch,cryptobib/abbrev3,cryptobib/crypto}
 \bibliographystyle{unsrt}
