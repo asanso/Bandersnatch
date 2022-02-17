@@ -1,14 +1,14 @@
-\documentclass[sigconf,nonacm]{acmart}
+\documentclass[smallextended]{svjour3}
 
 \usepackage{hyperref}
-\usepackage[capitalize]{cleveref}
 \usepackage{tikz}
 \usepackage[all]{xy}
-\usepackage[foot]{amsaddr}
-\usepackage{amsmath,amsfonts,amsthm}
+% \usepackage[foot]{amsaddr}
+\usepackage{amsmath,amsfonts}
 \usepackage{xcolor}
 \usepackage{tabularx}
 \usepackage{booktabs}
+% \usepackage[capitalize]{cleveref}
 
 \newcommand{\SM}[1]{\color{blue}#1\color{black}}
 \newcommand{\ZZ}[1]{\color{cyan}#1\color{black}}
@@ -25,19 +25,29 @@
   mathescape
 }
 
-\theoremstyle{definition}
-\newtheorem*{remark}{Remark}
+% \theoremstyle{definition}
+% \newtheorem*{remark}{Remark}
 
+
+\begin{document}
 \title{Bandersnatch: a fast elliptic curve built over the BLS12-381
   scalar field}
-\author{No author given}
+% \author{No author given}
+\titlerunning{Bandersnatch: a fast elliptic curve built over the BLS12-381
+scalar field}
+\author{ Simon Masson  \and Antonio Sanso   \and Zhenfei Zhang 
+}
+\institute{Anoma \and 
+Ethereum Foundation and Ruhr Universität Bochum \and Ethereum Foundation }
+
+
 \date{}
 
 \makeatletter
 \newcommand{\verbatimfont}[1]{\renewcommand{\verbatim@font}{\ttfamily#1}}
 \makeatother
 
-\begin{document}
+\maketitle
 
 \verbatimfont{\small}%
 
@@ -56,7 +66,8 @@
  from our result.
 \end{abstract}
 
-\maketitle
+\noindent{\em Keywords: Elliptic curve cryptography}\\
+\noindent{\em MSC Code: 94A60}
 
 \section{Introduction}
 %BLS12-381
@@ -304,9 +315,9 @@ acts as a scalar multiplication by the eigenvalue
 %                 cfc49db970a5056ed13d21408783df05
 % \end{lstlisting}
 \begin{align*}
-  \lambda = \text{\small{\tt
+  \lambda = \text{{\tt
     0x13b4f3dc4a39a493edf849562b38c72b}}&\\
-    \text{\small{\tt  cfc49db970a5056ed13d21408783df05}}&
+    \text{{\tt  cfc49db970a5056ed13d21408783df05}}&
 \end{align*}
 By construction, $\psi$ is the endomorphism $\sqrt{-2}\in \mathcal
 O_{-8}$. Thus, $\lambda$ satisfies
@@ -339,10 +350,10 @@ y\cdot \frac{x^2+2\cdot 44800x+t_0}{(x+44800)^2}\right),
 \end{align*}
 where
 \begin{verbatim}
-        u  = 0x50281ac0f92fc1b20fd897a16bf2b9e1
-               32bdcb06721c589296cf82245cf9382d,
-        t0 = 0x73eda753299d7d483339d80809a1d805
-               53bda402fffe5bfefffffffef10be001.
+                u  = 0x50281ac0f92fc1b20fd897a16bf2b9e1
+                      32bdcb06721c589296cf82245cf9382d,
+                t0 = 0x73eda753299d7d483339d80809a1d805
+                      53bda402fffe5bfefffffffef10be001.
 \end{verbatim}
 
 \paragraph{Subgroup generator.}
@@ -385,10 +396,10 @@ with
 \end{align*}
 and
 \begin{verbatim}
-        b = 0x52c9f28b828426a561f00d3a63511a88
-              2ea712770d9af4d6ee0f014d172510b4,
-        c = 0x6cc624cf865457c3a97c6efd6c17d107
-              8456abcfff36f4e9515c806cdf650b3d.
+                b = 0x52c9f28b828426a561f00d3a63511a88
+                      2ea712770d9af4d6ee0f014d172510b4,
+                c = 0x6cc624cf865457c3a97c6efd6c17d107
+                      8456abcfff36f4e9515c806cdf650b3d.
 \end{verbatim}
 This map can be computed in 3 additions and 9 multiplications by
 first computing $xy$, $y^2$, $z^2$ and $bz^2$.
@@ -410,10 +421,10 @@ provide here the Montgomery version because the scalar multiplication
 is more efficient in this model:
 $$E_M: By^2 = x^3 + Ax^2 + x$$
 \begin{verbatim}
-        B = 0x300c3385d13bedb7c9e229e185c4ce8b
-              1dd3b71366bb97c30855c0aa41d62727,
-        A = 0x4247698f4e32ad45a293959b4ca17afa
-              4a2d2317e4c6ce5023e1fd63d1b5de98.
+                B = 0x300c3385d13bedb7c9e229e185c4ce8b
+                      1dd3b71366bb97c30855c0aa41d62727,
+                A = 0x4247698f4e32ad45a293959b4ca17afa
+                      4a2d2317e4c6ce5023e1fd63d1b5de98.
 \end{verbatim}
 
 \paragraph{Endomorphism.}
@@ -423,8 +434,8 @@ model:
 $$\psi_\text{M}(x,-,z) = (-(x-z)^2 - cxz, -, 2xz)$$
 with
 \begin{verbatim}
-        c = 0x4247698f4e32ad45a293959b4ca17afa
-              4a2d2317e4c6ce5023e1fd63d1b5de9a.
+                c = 0x4247698f4e32ad45a293959b4ca17afa
+                      4a2d2317e4c6ce5023e1fd63d1b5de9a.
 \end{verbatim}
 
 \paragraph{Subgroup generator.}
