@@ -59,7 +59,7 @@ Ethereum Foundation and Ruhr Universität Bochum \and Ethereum Foundation }
  Our benchmark shows that the multiplication is 42\% faster, 
  21\% reduction in terms of circuit size in the 
  form of rank 1 constraint systems (R1CS), 
- and 10\% reduction in terms of plonk circuit,
+ and 10\% reduction in terms of Plonk circuit,
  compared to another curve, called Jubjub, having similar
  properties. Many zero-knowledge proof systems that rely on
  the Jubjub curve can benefit
@@ -141,7 +141,7 @@ in the forms of
 two commonly used circuit descriptions for zero-knowledge 
 proof systems, namely,
 rank one constraint system (R1CS), 
-and the plonk circuit.
+and the Plonk circuit.
 A group multiplication takes 
 2621 and 1669
 constraints, respectively, when the point is in affine form over the 
@@ -569,7 +569,7 @@ There are two common ways to express operations in SNARK-friendly circuits, name
 In general, the complexity is determined by the 
 number of constraints for both cases.
 The R1CS is universal, in that it is compatible with multiple 
-prover front-end. The plonk circuit is usually bounded to a specific
+prover front-end. The Plonk circuit is usually bounded to a specific
 plonk proving system, since Plonk prove system allows for customized
 selectors, and thus, customized circuits descriptions. For plonk
 circuit,
