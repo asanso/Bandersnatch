@@ -541,10 +541,28 @@ solution when dimension is really small. For a dimension greater
 than 4, MSM algorithms begin to out-perform trivial solutions.
 For dimension greater than 128, it is more efficient to 
 invoke the MSM directly, rather than doing it over the GLV basis.
-The reason is that the size of the basis becomes too large, so
-that the gain we get from halving the scalars is offset from the
-gain we get from halving the basis. We remark that this threshold
-point is platform dependent.
+
+
+The most popular algorithm to compute MSM is the Pippenger algorithm \cite{pip80}. 
+In theory, for $\lambda$ bits of scalars and $n$ bases, the algorithm takes
+$(1 + o(1))\frac{2\lambda n}{\log \lambda n}$ to execute \cite{msm}.
+Notice that whether the endomorphism is adapted, the product $\lambda n$ 
+remains the same. in other words, we halved the bit-length of the scalars,
+in exchange of doubling the dimension. However, we observe that the 
+Pippenger algorithm used by our underlying elliptic curve library, 
+namely, Arkworks version 0.3.0 \cite{arkworks} does not scale as expected.
+We believe this is due to two reasons. First, notice that the bucket sizes 
+in the Pippenger algorithm is rounded. 
+For small dimensions, it is optimized via benchmarks results, while for larger 
+dimensions it is derived from theatrical analysis. The latter may 
+introduce a larger rounding error. Secondly, we have ignored the memory
+cost in this analysis which contributes a noticeable but not significant 
+component in the total cost.
+
+% The reason is that the size of the basis becomes too large, so
+% that the gain we get from halving the scalars is offset from the
+% gain we get from halving the basis. We remark that this threshold
+% point is platform dependent.
 \begin{figure*}[h]\label{fig:msm}\centering 
   \includegraphics[width=12cm]{fig/msm.pdf}
 \end{figure*}
