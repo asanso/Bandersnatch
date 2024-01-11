@@ -9,7 +9,7 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 % \usepackage[capitalize]{cleveref}
-
+\usepackage{caption}
 \newcommand{\SM}[1]{\color{blue}#1\color{black}}
 \newcommand{\ZZ}[1]{\color{cyan}#1\color{black}}
 \newcommand{\AS}[1]{\color{red}#1\color{black}}
@@ -563,9 +563,9 @@ component in the total cost.
 % that the gain we get from halving the scalars is offset from the
 % gain we get from halving the basis. We remark that this threshold
 % point is platform dependent.
-\begin{figure*}[h]\label{fig:msm}\centering 
+\begin{figure}[h]\captionsetup{justification=centering}\caption{Multi-scalar-multiplications}\label{fig:msm}\centering 
   \includegraphics[width=12cm]{fig/msm.pdf}
-\end{figure*}
+\end{figure}
 
 \subsection{SNARK constraints}
 The Bandersnatch curve is zk-SNARK friendly: its 
