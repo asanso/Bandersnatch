@@ -154,9 +154,6 @@ twisted Edwards curve,
 % This matches what we have for Jubjub curve.
 yielding a 21\% and 10\% improvement over the Jubjub curve.
 
-Elliptic curves, such as Jubjub and Bandersnatch, have traditionally been represented in the Montgomery or Edwards form. However, recent advancements in research, notably the closed-form formulas presented in \cite{EC:RenCosBat16}, have enabled the efficient and secure utilization of prime order curves. 
-
-
 \paragraph{Organization of the paper.}
 In Section~\ref{sec:small-disc-curves}, we describe how we obtained
 several curves allowing the GLV method together with cryptographic
@@ -337,6 +334,8 @@ $$E_W:y^2 = x^3 -3763200000x -78675968000000.$$
 %% p=0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001
 %% E=EllipticCurve(GF(p), [-3763200000, -78675968000000])
 %% \end{verbatim}
+
+Elliptic curves, such as Jubjub and Bandersnatch, have traditionally been represented in the Montgomery or Edwards form. However, recent advancements in research, notably the closed-form formulas presented in \cite{EC:RenCosBat16}, have enabled the efficient and secure utilization of prime order curves. 
 
 \paragraph{Endomorphism.}
 The endomorphism $\psi$ can obtained using the method detailed above.
