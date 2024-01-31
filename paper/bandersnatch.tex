@@ -648,17 +648,18 @@ consumes another 10 constraints).
 \begin{algorithm}
   \caption{Double-and-Add algorithm in circuit}\label{alg:double-and-add}
   \begin{algorithmic}
-  \Require $G$ the group element
-  \Require $x$ the scalar field element
-  \Ensure $H = xG$
+  \Require $G, H$, two group elements
+  \Require $x$, a scalar field element
+  \Ensure Constraints that $H == xG$
   \State $(x_0,...x_{254})\gets \texttt{BitDecompose(x)}$ \Comment{Decomposition circuit}
-  \State $H = \texttt{InfinityPoint}$
+  \State $H' = \texttt{InfinityPoint}$
   \For {$i\in [0,254]$} 
     \If{$x_{254-i}==1$}         \Comment{Binary Selection circuit}
-      \State  $H \gets H + G$   \Comment{Group Add circuit}
+      \State  $H' \gets H' + G$   \Comment{Affine Curve Group Add circuit}
     \EndIf
-    \State $H \gets H + H$      \Comment{Group Double circuit}
+    \State $H' \gets H' + H'$      \Comment{Affine Curve Group Double circuit}
   \EndFor
+  \State $\texttt{EnforcePointEq}(H, H')$ \Comment{Equality circuit}
   \end{algorithmic}
 \end{algorithm}
 
