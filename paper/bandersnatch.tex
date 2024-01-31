@@ -679,9 +679,13 @@ is the order of the scalar field.
 We implemented this part of the code with $405$ constraints
 via hand optimized circuits.
 
-\subsubsection{Plonk}
+\subsubsection{TurboPlonk}
 We apply a similar analysis for our customized, ECC-friendly 
-plonk system. In a double-and-add circuit, each bit in the scalar
+plonk system \cite{cryptoeprint:2022/802}. 
+This custom gate design allows us to express a group add or 
+double operation within 2 gates. 
+As a result,
+in a double-and-add circuit, each bit in the scalar
 takes 7 constraints in total, i.e., 2 for point selection, 2 
 for addition, 2 for doubling, and 1 for binary decomposition.
 For a scalar length of 256 bits, this is roughly $1800$ constraints.
