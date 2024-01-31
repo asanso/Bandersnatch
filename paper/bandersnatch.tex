@@ -9,6 +9,8 @@
 \usepackage{xcolor}
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 \newcommand{\SM}[1]{\color{blue}#1\color{black}}
 \newcommand{\ZZ}[1]{\color{cyan}#1\color{black}}
@@ -550,12 +552,31 @@ variable base group multiplication. For a double-and-add
 algorithm, 
 our code reports 3177 constraints in 
 total.
+We use the default double-and-add circuit framework from Arkworks \cite{arkworks}.
+A sketch of the scheme is presented in Algorithm \ref{alg:double-and-add}.
 As a sanity check, within the core logic,
 it takes 6 constraints per addition, 5 constraints
 per doubling and 2 constraints per bit selection. This adds
 up to 13 constraints per bit, or 3177 constraints per
 group multiplication (and we reasonably assume some system overhead
 consumes another 10 constraints). 
+
+\begin{algorithm}
+  \caption{Double-and-Add algorithm in circuit}\label{alg:double-and-add}
+  \begin{algorithmic}
+  \Require $G$ the group element
+  \Require $x$ the scalar field elemetn
+  \Ensure $H = xG$
+  \State $(x_0,...x_{254})\gets \texttt{BitDecompose(x)}$ \Comment{Decomposition circuit}
+  \State $H = \texttt{InfinityPoint}$
+  \For {$i\in [0,254]$} 
+    \If{$x_{254-i}==1$}         \Comment{Binary Selection circuit}
+      \State  $H \gets H + G$   \Comment{Group Add circuit}
+    \EndIf
+    \State $H \gets H + H$      \Comment{Group Double circuit}
+  \EndFor
+  \end{algorithmic}
+\end{algorithm}
 
 Now, in the case of GLV,
 % Let us first explain the obstacle of implementing the GLV
