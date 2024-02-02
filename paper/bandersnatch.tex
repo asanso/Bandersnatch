@@ -221,20 +221,18 @@ meaning that there is a rational map between them. Isogenous curves
 have the same order so that we can restrict on fundamental
 discriminants for our search.
 
-We compute an exhaustive search among all the possible (fundamental)
-discriminants ($-292 \leq -D \leq -3$).
-Given a discriminant $-D$, roughly half of the curves are
-supersingular and hence not relevant to our cryptographic
-applications.
-We list in Table~\ref{tab:group-order-factorization} the ordinary
-curves we obtained. In this table, $p_n$ denotes a prime of $n$ bits.
-The generation of these curves is reproducible
-using the file at ~\url{https://github.com/asanso/Bandersnatch/blob/main/python-ref-impl/small-disc-curves.py}.
-We finally obtain an interesting curve for $-D = -8$ with large prime
-order subgroups on both the curve and its twist.
-We present in Section~\ref{sec:bandersnatch} the curve in several
-models, together with the endomorphism in order to apply the GLV
-scalar multiplication algorithm.
+We compute an exhaustive search following the CM method [CITE PAPER].
+Given a discriminant $-D$, we obtain deterministically the curves of discriminant $-D$ using number theory tool.
+More precisely, we consider the Hilbert class polynomial $H_{-D}(X)$. The roots of $H_{-D}$ are the $j$-invariants of curves defined over a number field whose endomorphism ring is an order of discriminant $D$.
+In practice, for a given discriminant $D$, roughly half of the curves are supersingular and hence not relevant to our cryptographic applications.
+As we look for an efficient endomorphism, we consider small discriminant curves. We provide in Algorithm~\ref{alg:search} the algorithm we used in order to obtain curves for our interest.
+
+Starting with $-D = -3$, we consider elliptic  $H_{-D}$ and factor it in order to get the curves of discriminant $-D$ (up to isomorphism). From the elliptic curve, we obtain the trace and then the order of the curve defined over $\mathbb F_p$, and finally factor it in order to obtain a cryptographically interesting curve.
+We considered curves up to $D_{\max} = 388$, corresponding to a fundamental discriminant of $-292$.
+We list in Table 2 the ordinary curves we obtained. In this table,
+pn denotes a prime of n bits. The generation of these curves is reproducible
+using the file at~\url{https://github.com/asanso/Bandersnatch/blob/main/python-ref-impl/small-disc-curves.py}.
+We finally obtain an interesting curve for $-D = -8$ with large prime order subgroups on both the curve and its twist. We present in Section~\ref{sec:bandersnatch} the curve in several models, together with the endomorphism in order to apply the GLV scalar multiplication algorithm.
 
 \begin{table*}[!ht]
     \centering%\footnotesize
