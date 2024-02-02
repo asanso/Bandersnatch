@@ -22,6 +22,10 @@
 \newcommand{\Fp}{\ensuremath{\mathbb F_p}}
 \newcommand{\End}{\ensuremath{\text{End}}}
 
+\algnewcommand\algorithmicforeach{\textbf{for each}}
+\algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
+
+
 \usepackage{listings}% http://ctan.org/pkg/listings
 \lstset{
   basicstyle=\ttfamily,
@@ -226,6 +230,27 @@ Given a discriminant $-D$, we obtain deterministically the curves of discriminan
 More precisely, we consider the Hilbert class polynomial $H_{-D}(X)$. The roots of $H_{-D}$ are the $j$-invariants of curves defined over a number field whose endomorphism ring is an order of discriminant $D$.
 In practice, for a given discriminant $D$, roughly half of the curves are supersingular and hence not relevant to our cryptographic applications.
 As we look for an efficient endomorphism, we consider small discriminant curves. We provide in Algorithm~\ref{alg:search} the algorithm we used in order to obtain curves for our interest.
+
+\begin{algorithm}
+\caption{Search of curves}
+\label{alg:search}
+\begin{algorithmic}[1]
+    \State \textbf{For} $-D = -D_{\min}$
+    \ForEach {$D \in \{D_{\min}, \hdots, D_{\max}\}$}
+        \State $D_0 \gets$ fundamental discriminant of $-D$
+        \State $H_{-D_0}(X) \gets$ Hilbert class polynomial of degree $D_0$
+        \State Factor $H_{-D_0}$ and compute the roots $R$
+        \ForEach{$j_0\in R$}
+            \ForEach{$E$ elliptic curve of $j$-invariant $j_0$ (up to isomorphism)}
+                \If{$E$ is not supersingular}
+                    \State $N \gets$ Order($E$)
+                    \State Store the factorization of $N$
+                \EndIf
+            \EndFor
+        \EndFor 
+    \EndFor
+\end{algorithmic}
+\end{algorithm}
 
 Starting with $-D = -3$, we consider elliptic  $H_{-D}$ and factor it in order to get the curves of discriminant $-D$ (up to isomorphism). From the elliptic curve, we obtain the trace and then the order of the curve defined over $\mathbb F_p$, and finally factor it in order to obtain a cryptographically interesting curve.
 We considered curves up to $D_{\max} = 388$, corresponding to a fundamental discriminant of $-292$.
