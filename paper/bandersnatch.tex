@@ -582,7 +582,7 @@ in exchange of doubling the dimension. However, we observe that the
 Pippenger algorithm used by our underlying elliptic curve library, 
 namely, Arkworks version 0.3.0 \cite{arkworks} does not scale as expected.
 We believe this is due to two reasons. First, notice that the bucket sizes 
-in the Pippenger algorithm is rounded. 
+in the Pippenger algorithm are rounded. 
 For small dimensions, it is optimized via benchmarks results, while for larger 
 dimensions it is derived from theatrical analysis. The latter may 
 introduce a larger rounding error. Secondly, we have ignored the memory
