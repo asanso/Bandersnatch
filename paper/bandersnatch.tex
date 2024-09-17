@@ -1,6 +1,6 @@
-\documentclass[smallextended]{svjour3}
+\documentclass[version=preprint]{iacrcc}
 
-\usepackage{hyperref}
+% \usepackage{hyperref}
 \usepackage{tikz}
 \usepackage[all]{xy}
 % \usepackage[foot]{amsaddr}
@@ -35,25 +35,40 @@
 % \theoremstyle{definition}
 % \newtheorem*{remark}{Remark}
 
-
-\begin{document}
-\title{Bandersnatch: a fast elliptic curve built over the BLS12-381
-  scalar field}
-% \author{No author given}
-\titlerunning{Bandersnatch: a fast elliptic curve built over the BLS12-381
-scalar field}
-\author{ Simon Masson  \and Antonio Sanso   \and Zhenfei Zhang 
-}
-\institute{Anoma \and 
-Ethereum Foundation and Ruhr Universität Bochum \and Ethereum Foundation }
-
-
-\date{}
-
 \makeatletter
 \newcommand{\verbatimfont}[1]{\renewcommand{\verbatim@font}{\ttfamily#1}}
 \makeatother
 
+\date{}
+
+\begin{document}
+
+\title[running={Bandersnatch}]{
+  Bandersnatch: a fast elliptic curve built over the BLS12-381 scalar field
+}
+
+\addauthor[inst={1},
+           orcid={0000-0001-8778-2575},
+           email={simon.masson@protonmail.com},
+           onclick={https://github.com/simonmasson}]{Simon Masson}
+
+\addauthor[inst={2},
+           orcid={0009-0003-8878-5761},
+           email={antonio.sanso@ethereum.org},
+           onclick={https://github.com/asanso}]{Antonio Sanso}
+
+\addauthor[inst={2},
+           orcid={0000-0001-5131-5377},
+           email={zhenfei.zhang@ethereum.org},
+           onclick={https://github.com/zhenfeizhang}]{Zhenfei Zhang}
+
+
+\addaffiliation{Anoma}
+
+\addaffiliation{Ethereum Foundation}
+  
+% \addaffiliation{Ethereum Foundation}
+     
 \maketitle
 
 \verbatimfont{\small}%
@@ -746,5 +761,5 @@ the corresponding R1CS circuit.
  Their valuable feedback significantly enhanced the quality and clarity of the paper.
 
 \bibliography{bandersnatch,cryptobib/abbrev3,cryptobib/crypto}
-\bibliographystyle{unsrt}
+
 \end{document}
